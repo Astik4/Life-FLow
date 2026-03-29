@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LifeFlow — Admin Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --crimson: #C1121F;
+    --crimson-deep: #780000;
+    --crimson-light: #E63946;
+    --cream: #FDF8F0;
+    --warm-white: #FFFCF7;
+    --charcoal: #1A1A2E;
+    --gray-soft: #6B6B7B;
+    --gray-light: #F0EDE8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--charcoal);
+    min-height: 100vh;
+    display: flex;
+    overflow: hidden;
+  }
+
+  /* ─── LEFT PANEL ─── */
+  .left-panel {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 52px 56px;
+    overflow: hidden;
+  }
+
+  .left-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 40%, rgba(193,18,31,0.4) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 80%, rgba(120,0,0,0.25) 0%, transparent 50%);
+  }
+
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(193,18,31,0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(193,18,31,0.07) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+
+  .left-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 0;
+  }
+
+  .brand-drop {
+    width: 44px;
+    height: 44px;
+    background: var(--crimson);
+    border-radius: 50% 50% 50% 10%;
+    transform: rotate(-45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(193,18,31,0.5);
+  }
+
+  .brand-drop-inner {
+    width: 14px;
+    height: 14px;
+    background: rgba(255,255,255,0.4);
+    border-radius: 50%;
+    transform: rotate(45deg);
+  }
+
+  .brand-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: #fff;
+    letter-spacing: 0.05em;
+    line-height: 1;
+  }
+
+  .brand-name span { color: var(--crimson-light); }
+
+  .left-hero {
+    position: relative;
+    z-index: 2;
+    margin-top: auto;
+    margin-bottom: auto;
+    padding: 60px 0;
+  }
+
+  .left-hero .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--crimson-light);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .left-hero .eyebrow::before {
+    content: '';
+    display: block;
+    width: 28px;
+    height: 1px;
+    background: var(--crimson-light);
+  }
+
+  .left-hero h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 6vw, 88px);
+    line-height: 0.9;
+    color: #fff;
+    letter-spacing: 0.02em;
+  }
+
+  .left-hero h2 span {
+    color: var(--crimson-light);
+    display: block;
+  }
+
+  .left-hero p {
+    margin-top: 24px;
+    font-size: 15px;
+    color: rgba(255,255,255,0.45);
+    max-width: 360px;
+    line-height: 1.75;
+    font-weight: 300;
+  }
+
+  .left-stats {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    gap: 28px;
+  }
+
+  .lst {
+    text-align: center;
+  }
+
+  .lst .num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .lst .lbl {
+    font-size: 10px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .lst-divider {
+    width: 1px;
+    background: rgba(255,255,255,0.08);
+    align-self: stretch;
+  }
+
+  /* ─── RIGHT PANEL ─── */
+  .right-panel {
+    width: 480px;
+    flex-shrink: 0;
+    background: var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 52px;
+    position: relative;
+  }
+
+  .right-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--crimson-deep), var(--crimson-light), var(--crimson-deep));
+  }
+
+  .login-box {
+    width: 100%;
+  }
+
+  .login-box .lb-eyebrow {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--crimson);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .login-box .lb-eyebrow::before {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 1px;
+    background: var(--crimson);
+  }
+
+  .login-box h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px;
+    color: var(--charcoal);
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+
+  .login-box h3 em {
+    color: var(--crimson);
+    font-style: italic;
+  }
+
+  .login-box .subtitle {
+    font-size: 13.5px;
+    color: var(--gray-soft);
+    font-weight: 300;
+    margin-bottom: 36px;
+  }
+
+  /* ─── FIELDS ─── */
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 20px;
+  }
+
+  .field label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray-soft);
+  }
+
+  .input-wrap {
+    position: relative;
+  }
+
+  .input-wrap .field-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #C0BBBA;
+    transition: color 0.2s;
+    pointer-events: none;
+  }
+
+  .input-wrap input {
+    width: 100%;
+    padding: 13px 16px 13px 44px;
+    border: 1.5px solid var(--gray-light);
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--charcoal);
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .input-wrap input:focus {
+    border-color: var(--crimson-light);
+    box-shadow: 0 0 0 3px rgba(193,18,31,0.08);
+  }
+
+  .input-wrap input:focus + .field-icon,
+  .input-wrap input:focus ~ .field-icon {
+    color: var(--crimson-light);
+  }
+
+  /* fix icon focus (icon is before in DOM) */
+  .input-wrap:focus-within .field-icon { color: var(--crimson-light); }
+
+  /* Password toggle */
+  .pw-toggle {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #C0BBBA;
+    transition: color 0.2s;
+    padding: 0;
+    line-height: 1;
+  }
+
+  .pw-toggle:hover { color: var(--gray-soft); }
+
+  /* ─── SUBMIT BUTTON ─── */
+  .btn-login {
+    width: 100%;
+    padding: 15px;
+    background: var(--crimson);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 18px rgba(193,18,31,0.28);
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-login:hover {
+    background: var(--crimson-deep);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 26px rgba(193,18,31,0.38);
+  }
+
+  .btn-login:active { transform: translateY(0); }
+
+  .btn-login.loading {
+    pointer-events: none;
+    opacity: 0.8;
+  }
+
+  .spinner {
+    width: 18px; height: 18px;
+    border: 2px solid rgba(255,255,255,0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+
+  .btn-login.loading .spinner { display: block; }
+  .btn-login.loading .btn-text { display: none; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ─── ERROR / SUCCESS MSG ─── */
+  .msg-box {
+    margin-top: 18px;
+    padding: 13px 16px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 500;
+    display: none;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .msg-box.error {
+    display: flex;
+    background: #FEE2E2;
+    color: #991B1B;
+    border: 1px solid #FECACA;
+  }
+
+  .msg-box.success {
+    display: flex;
+    background: #D1E7DD;
+    color: #0A3622;
+    border: 1px solid #A3CFBB;
+  }
+
+  /* ─── DIVIDER ─── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 28px 0 20px;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--gray-light);
+  }
+
+  .divider span {
+    font-size: 11px;
+    color: #C0BBBA;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .secure-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #C0BBBA;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 820px) {
+    .left-panel { display: none; }
+    .right-panel { width: 100%; padding: 40px 28px; }
+    .right-panel::before { display: none; }
+    body { background: var(--cream); }
+  }
+</style>
+</head>
+<body>
+
+<!-- LEFT DECORATIVE PANEL -->
+<div class="left-panel">
+  <div class="grid-bg"></div>
+
+  <div class="left-content">
+    <div class="brand">
+      <div class="brand-drop"><div class="brand-drop-inner"></div></div>
+      <div class="brand-name">LIFE<span>FLOW</span></div>
+    </div>
+  </div>
+
+  <div class="left-hero">
+    <div class="eyebrow">Restricted Access</div>
+    <h2>ADMIN<span>PORTAL</span></h2>
+    <p>Secure control panel for managing donors, recipients, and blood requests across the network.</p>
+  </div>
+
+  <div class="left-stats">
+    <div class="lst">
+      <div class="num">8</div>
+      <div class="lbl">Blood Types</div>
+    </div>
+    <div class="lst-divider"></div>
+    <div class="lst">
+      <div class="num">24/7</div>
+      <div class="lbl">Availability</div>
+    </div>
+    <div class="lst-divider"></div>
+    <div class="lst">
+      <div class="num">100%</div>
+      <div class="lbl">Secure</div>
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT LOGIN PANEL -->
+<div class="right-panel">
+  <div class="login-box">
+
+    <div class="lb-eyebrow">Admin Access</div>
+    <h3>Welcome <em>back</em></h3>
+    <p class="subtitle">Sign in to access the LifeFlow admin dashboard.</p>
+
+    <div class="field">
+      <label>Username</label>
+      <div class="input-wrap">
+        <span class="field-icon">👤</span>
+        <input id="username" type="text" placeholder="Enter your username" autocomplete="username" onkeyup="if(event.key==='Enter')login()">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Password</label>
+      <div class="input-wrap">
+        <span class="field-icon">🔒</span>
+        <input id="password" type="password" placeholder="Enter your password" autocomplete="current-password" onkeyup="if(event.key==='Enter')login()">
+        <button class="pw-toggle" type="button" onclick="togglePw(this)" title="Show/hide password">👁</button>
+      </div>
+    </div>
+
+    <button class="btn-login" id="login-btn" onclick="login()">
+      <div class="spinner"></div>
+      <span class="btn-text">🔐 &nbsp;Sign In</span>
+    </button>
+
+    <div class="msg-box" id="msg-box">
+      <span id="msg-icon">❌</span>
+      <span id="msg-text">Invalid credentials. Please try again.</span>
+    </div>
+
+    <div class="divider"><span>secured by LifeFlow</span></div>
+    <div class="secure-note">🛡 &nbsp;256-bit encrypted · Admin only</div>
+
+  </div>
+</div>
+
+<script>
+function togglePw(btn) {
+  const input = document.getElementById('password');
+  const isHidden = input.type === 'password';
+  input.type = isHidden ? 'text' : 'password';
+  btn.textContent = isHidden ? '🙈' : '👁';
+}
+
+function showMsg(text, type = 'error') {
+  const box = document.getElementById('msg-box');
+  const icon = document.getElementById('msg-icon');
+  const msg  = document.getElementById('msg-text');
+  box.className = `msg-box ${type}`;
+  icon.textContent = type === 'error' ? '❌' : '✅';
+  msg.textContent = text;
+}
+
+function hideMsg() {
+  document.getElementById('msg-box').className = 'msg-box';
+}
+
+async function login() {
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+
+  if (!username || !password) {
+    return showMsg('Please enter both username and password.');
+  }
+
+  const btn = document.getElementById('login-btn');
+  btn.classList.add('loading');
+  hideMsg();
+
+  try {
+    const res = await fetch('/admin_login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      showMsg('Login successful! Redirecting…', 'success');
+      setTimeout(() => window.location.href = '/admin_dashboard', 900);
+    } else {
+      showMsg(data.message || 'Invalid username or password.');
+    }
+  } catch {
+    // Demo fallback
+    if (username === 'admin' && password === 'admin123') {
+      showMsg('Login successful! Redirecting…', 'success');
+      setTimeout(() => window.location.href = '/admin_dashboard', 900);
+    } else {
+      showMsg('Invalid username or password. Try admin / admin123');
+    }
+  } finally {
+    btn.classList.remove('loading');
+  }
+}
+
+// Auto-focus username
+document.getElementById('username').focus();
+</script>
+</body>
+</html>
