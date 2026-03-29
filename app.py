@@ -157,11 +157,13 @@ def all_donors():
         return error("Failed to fetch donors.")
 
 
-@app.route("/search_donor/<donor_id>", methods=["GET"])
-def search_donor(donor_id):
+@app.route("/search_donor/", methods=["GET"])
+def search_donor():
+    donor_id = request.args.get("donor_id")
+    city = request.args.get("city")
     try:
         cur = safe_cursor()
-        cur.execute("SELECT * FROM donor WHERE Donor_id = %s", (donor_id,))
+        cur.execute("SELECT * FROM donor WHERE Donor_id = %s OR City = %s", (donor_id, city))
         row = cur.fetchone()
         if not row:
             return error("Donor not found.", 404)
