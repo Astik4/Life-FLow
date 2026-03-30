@@ -931,7 +931,7 @@
   <div class="panel" id="panel-search">
     <div class="panel-header">
       <h2>Find a <em>Donor</em></h2>
-      <p>Search by Donor ID to view complete donor information.</p>
+      <p>Search by Donor ID or City to view complete donor information.</p>
     </div>
     <div class="search-wrap">
       <div class="field" style="flex:1">
@@ -940,6 +940,10 @@
           <span class="search-icon">🔍</span>
           <input id="search_id" placeholder="Enter Donor ID (e.g. DNR-001)" onkeyup="if(event.key==='Enter')searchDonor()">
         </div>
+      </div>
+      <div class="field">
+        <label>City</label>
+        <input id="search_city" placeholder="Enter City (e.g. Faridabad)" onkeyup="if(event.key==='Enter')searchDonor()">
       </div>
       <button class="btn-primary" onclick="searchDonor()">Search</button>
       <button class="btn-secondary" onclick="clearSearch()">Clear</button>
@@ -1130,6 +1134,8 @@ async function addDonor() {
     blood_group: val('d_group'), age: val('d_age'),
     gender: val('d_gender'), phone: val('d_phone'),
     city: val('d_city'), last_donation_date: val('d_date')
+
+    loadDonors();
   };
   if (!payload.donor_id || !payload.name || !payload.blood_group) {
     return toast('Please fill ID, Name & Blood Group', 'error');

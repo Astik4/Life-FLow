@@ -907,6 +907,7 @@ async function loadDonors() {
     const data = await res.json();
     renderDonors(data.donors);
   } catch { renderDonors(demo.donors); }
+  setInterval(loadDonors, 30000); // Auto-refresh every 30 seconds
 }
 
 function renderDonors(list) {
@@ -1042,10 +1043,12 @@ async function deleteRequest(id) {
 /* ══════════════════════════════════════
    MATCHES — FIND
 ══════════════════════════════════════ */
-async function findMatches() {
+async function findMatches() { { 
   const group = document.getElementById('match_group').value.trim();
   const city  = document.getElementById('match_city').value.trim();
   if (!group && !city) return toast('Enter a blood group or city to search.', 'error');
+  return await searchMatches(group, city);
+  } 
 
   showShimmer('match_results_table', 8);
   document.getElementById('match-results-wrap').classList.add('visible');
@@ -1062,6 +1065,7 @@ async function findMatches() {
     if (city)  results = results.filter(d => d.city.toLowerCase().includes(city.toLowerCase()));
     renderMatchResults(results, group, city);
   }
+
 }
 
 function renderMatchResults(list, group, city) {
