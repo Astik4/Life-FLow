@@ -83,8 +83,8 @@ def logout():
 
 
 #  ADMIN AUTH
-ADMIN_USERNAME      = "Astik"
-ADMIN_PASSWORD_HASH = "pbkdf2:sha256:1000000$SEbIrOcXrnNkJYe4$2dcd2d212dfb534eefd7d843ecc2f46f9ea375d1cc456d431b647d4f2976a512"
+ADMIN_USERNAME      = os.getenv("ADMIN_USERNAME", "admin")
+ADMIN_PASSWORD_HASH = os.getenv("ADMIN_PASSWORD_HASH", "")
 
 @app.route("/admin_login", methods=["POST"])
 def admin_login():
