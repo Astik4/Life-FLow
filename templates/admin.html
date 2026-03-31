@@ -7,1189 +7,682 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
   :root {
-    --crimson: #C1121F;
-    --crimson-deep: #780000;
-    --crimson-light: #E63946;
-    --cream: #FDF8F0;
-    --warm-white: #FFFCF7;
-    --charcoal: #1A1A2E;
-    --gray-soft: #6B6B7B;
-    --gray-light: #F0EDE8;
-    --success: #2D6A4F;
-    --danger-bg: #FEE2E2;
-    --danger-text: #991B1B;
-    --indigo: #4F46E5;
-    --indigo-bg: #EEF2FF;
-    --indigo-dark: #1E1B4B;
+    --crimson:#C1121F; --crimson-deep:#780000; --crimson-light:#E63946;
+    --cream:#FDF8F0; --warm-white:#FFFCF7; --charcoal:#1A1A2E;
+    --gray-soft:#6B6B7B; --gray-light:#F0EDE8; --success:#2D6A4F;
+    --danger-bg:#FEE2E2; --danger-text:#991B1B;
+    --indigo:#4F46E5; --indigo-dark:#1E1B4B; --indigo-bg:#EEF2FF;
   }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--charcoal);min-height:100vh;overflow-x:hidden;}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* HERO */
+  .hero{background:var(--charcoal);position:relative;overflow:hidden;padding:46px 60px 56px;}
+  .hero::before{content:'';position:absolute;inset:0;
+    background:radial-gradient(ellipse at 80% 50%,rgba(193,18,31,.3) 0%,transparent 60%),
+               radial-gradient(ellipse at 5% 90%,rgba(120,0,0,.2) 0%,transparent 50%);}
+  .hg{position:absolute;inset:0;
+    background-image:linear-gradient(rgba(193,18,31,.06) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(193,18,31,.06) 1px,transparent 1px);
+    background-size:50px 50px;}
+  .hi{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:30px;flex-wrap:wrap;}
+  .ht .ey{font-size:11px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--crimson-light);
+    margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+  .ht .ey::before{content:'';display:block;width:28px;height:1px;background:var(--crimson-light);}
+  .ht h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,7vw,90px);line-height:.9;color:#fff;letter-spacing:.02em;}
+  .ht h1 span{color:var(--crimson-light);}
+  .ht p{margin-top:18px;font-size:14px;color:rgba(255,255,255,.45);font-weight:300;}
+  .hbadges{display:flex;gap:12px;flex-shrink:0;flex-wrap:wrap;}
+  .hbadge{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;
+    padding:16px 22px;text-align:center;backdrop-filter:blur(10px);position:relative;overflow:hidden;min-width:84px;}
+  .hbadge::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,transparent,var(--crimson-light),transparent);}
+  .hbadge.ib::after{background:linear-gradient(90deg,transparent,#818CF8,transparent);}
+  .hbadge .bl{font-size:10px;color:rgba(255,255,255,.35);letter-spacing:.2em;text-transform:uppercase;margin-bottom:5px;}
+  .hbadge .bv{font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;line-height:1;}
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--cream);
-    color: var(--charcoal);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+  /* NAV */
+  .nav-bar{background:var(--warm-white);border-bottom:1px solid var(--gray-light);padding:0 60px;
+    display:flex;position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,.06);overflow-x:auto;}
+  .nav-tab{padding:18px 22px;font-size:13px;font-weight:500;color:var(--gray-soft);cursor:pointer;
+    border-bottom:3px solid transparent;transition:all .2s;display:flex;align-items:center;gap:8px;white-space:nowrap;}
+  .nav-tab .ti{font-size:16px;transition:transform .2s;}
+  .nav-tab:hover{color:var(--crimson);}
+  .nav-tab:hover .ti{transform:scale(1.2);}
+  .nav-tab.active{color:var(--crimson);border-bottom-color:var(--crimson);font-weight:600;}
+  .nav-tab.im.active{color:var(--indigo);border-bottom-color:var(--indigo);}
+  .nav-tab.im:hover{color:var(--indigo);}
 
-  /* ─── HERO ─── */
-  .hero {
-    background: var(--charcoal);
-    position: relative;
-    overflow: hidden;
-    padding: 46px 60px 56px;
-  }
-  .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at 80% 50%, rgba(193,18,31,0.3) 0%, transparent 60%),
-                radial-gradient(ellipse at 5% 90%, rgba(120,0,0,0.2) 0%, transparent 50%);
-  }
-  .hero-grid {
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(193,18,31,0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(193,18,31,0.06) 1px, transparent 1px);
-    background-size: 50px 50px;
-  }
-  .hero-inner {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 30px;
-    flex-wrap: wrap;
-  }
-  .hero-text .eyebrow {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--crimson-light);
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .hero-text .eyebrow::before {
-    content: '';
-    display: block;
-    width: 28px;
-    height: 1px;
-    background: var(--crimson-light);
-  }
-  .hero-text h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(48px, 7vw, 90px);
-    line-height: 0.9;
-    color: #fff;
-    letter-spacing: 0.02em;
-  }
-  .hero-text h1 span { color: var(--crimson-light); }
-  .hero-text p {
-    margin-top: 18px;
-    font-size: 14px;
-    color: rgba(255,255,255,0.45);
-    font-weight: 300;
-  }
-  .hero-badges { display: flex; gap: 14px; flex-shrink: 0; flex-wrap: wrap; }
-  .hero-badge {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 14px;
-    padding: 18px 24px;
-    text-align: center;
-    backdrop-filter: blur(10px);
-    position: relative;
-    overflow: hidden;
-    min-width: 86px;
-  }
-  .hero-badge::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--crimson-light), transparent);
-  }
-  .hero-badge.match-badge::after {
-    background: linear-gradient(90deg, transparent, #818CF8, transparent);
-  }
-  .hero-badge .badge-label {
-    font-size: 10px;
-    color: rgba(255,255,255,0.35);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-  }
-  .hero-badge .badge-val {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 38px;
-    color: #fff;
-    line-height: 1;
-  }
+  /* MAIN */
+  .main{padding:48px 60px;max-width:1500px;margin:0 auto;}
+  .panel{display:none;animation:fadeUp .35s ease both;}
+  .panel.active{display:block;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
-  /* ─── NAV ─── */
-  .nav-bar {
-    background: var(--warm-white);
-    border-bottom: 1px solid var(--gray-light);
-    padding: 0 60px;
-    display: flex;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
-    overflow-x: auto;
-  }
-  .nav-tab {
-    padding: 18px 24px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--gray-soft);
-    cursor: pointer;
-    border-bottom: 3px solid transparent;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    white-space: nowrap;
-  }
-  .nav-tab .tab-icon { font-size: 16px; transition: transform 0.2s; }
-  .nav-tab:hover { color: var(--crimson); }
-  .nav-tab:hover .tab-icon { transform: scale(1.2); }
-  .nav-tab.active { color: var(--crimson); border-bottom-color: var(--crimson); font-weight: 600; }
-  .nav-tab.match-tab.active { color: var(--indigo); border-bottom-color: var(--indigo); }
-  .nav-tab.match-tab:hover { color: var(--indigo); }
+  /* PANEL HEADER */
+  .ph{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:26px;flex-wrap:wrap;gap:14px;}
+  .phl h2{font-family:'DM Serif Display',serif;font-size:32px;color:var(--charcoal);}
+  .phl h2 em{color:var(--crimson);font-style:italic;}
+  .phl h2 em.ii{color:var(--indigo);}
+  .phl p{margin-top:6px;color:var(--gray-soft);font-size:13px;font-weight:300;}
 
-  /* ─── MAIN ─── */
-  .main { padding: 50px 60px; max-width: 1500px; margin: 0 auto; }
-  .panel { display: none; animation: fadeUp 0.35s ease both; }
-  .panel.active { display: block; }
+  /* TOOLBAR */
+  .tb{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .sb{position:relative;}
+  .sb input{padding:10px 14px 10px 38px;border:1.5px solid var(--gray-light);border-radius:10px;
+    font-family:'DM Sans',sans-serif;font-size:13px;color:var(--charcoal);outline:none;background:#fff;
+    width:210px;transition:border-color .2s,box-shadow .2s;}
+  .sb input:focus{border-color:var(--crimson-light);box-shadow:0 0 0 3px rgba(193,18,31,.08);}
+  .sb .si{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--gray-soft);}
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+  /* BUTTONS */
+  .bp{padding:10px 20px;background:var(--crimson);color:#fff;border:none;border-radius:10px;
+    font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;
+    transition:background .2s,transform .15s;box-shadow:0 3px 12px rgba(193,18,31,.22);
+    display:inline-flex;align-items:center;gap:6px;}
+  .bp:hover{background:var(--crimson-deep);transform:translateY(-1px);}
+  .bi{padding:10px 20px;background:var(--indigo);color:#fff;border:none;border-radius:10px;
+    font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;
+    transition:background .2s,transform .15s;box-shadow:0 3px 12px rgba(79,70,229,.25);
+    display:inline-flex;align-items:center;gap:6px;}
+  .bi:hover{background:#3730A3;transform:translateY(-1px);}
+  .bd{padding:6px 12px;background:var(--danger-bg);color:var(--danger-text);border:none;border-radius:8px;
+    font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;
+    transition:background .2s;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;}
+  .bd:hover{background:#FCA5A5;}
+  .bm{padding:6px 12px;background:var(--indigo-bg);color:var(--indigo);border:none;border-radius:8px;
+    font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;
+    transition:background .2s;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;}
+  .bm:hover{background:#C7D2FE;}
+  .bc{padding:10px 20px;background:var(--gray-light);color:var(--charcoal);border:none;border-radius:10px;
+    font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s;}
+  .bc:hover{background:#E0DDD8;}
 
-  /* ─── PANEL HEADER ─── */
-  .panel-header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    margin-bottom: 28px;
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-  .panel-header-left h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 34px;
-    color: var(--charcoal);
-  }
-  .panel-header-left h2 em { color: var(--crimson); font-style: italic; }
-  .panel-header-left h2 em.indigo { color: var(--indigo); }
-  .panel-header-left p { margin-top: 6px; color: var(--gray-soft); font-size: 13px; font-weight: 300; }
+  /* TABLE */
+  .tw{overflow-x:auto;border-radius:18px;border:1px solid rgba(0,0,0,.06);box-shadow:0 4px 30px rgba(0,0,0,.05);}
+  table{width:100%;border-collapse:collapse;background:var(--warm-white);font-size:13.5px;}
+  thead{background:var(--charcoal);}
+  thead th{padding:14px 16px;text-align:left;font-size:10.5px;font-weight:600;letter-spacing:.12em;
+    text-transform:uppercase;color:rgba(255,255,255,.55);white-space:nowrap;}
+  tbody tr{border-bottom:1px solid var(--gray-light);transition:background .15s;}
+  tbody tr:last-child{border-bottom:none;}
+  tbody tr:hover{background:rgba(193,18,31,.025);}
+  tbody td{padding:13px 16px;color:var(--charcoal);white-space:nowrap;}
+  .tdn{font-weight:600;}
+  .er td{text-align:center;padding:40px 20px!important;color:var(--gray-soft);font-size:14px;}
 
-  /* ─── TOOLBAR ─── */
-  .toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-  .search-box { position: relative; }
-  .search-box input {
-    padding: 10px 16px 10px 40px;
-    border: 1.5px solid var(--gray-light);
-    border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    color: var(--charcoal);
-    outline: none;
-    background: #fff;
-    width: 220px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-  .search-box input:focus {
-    border-color: var(--crimson-light);
-    box-shadow: 0 0 0 3px rgba(193,18,31,0.08);
-  }
-  .search-box .si { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 14px; color: var(--gray-soft); }
+  .bb{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:26px;
+    border-radius:6px;background:var(--crimson);color:#fff;font-family:'Bebas Neue',sans-serif;
+    font-size:13px;padding:0 7px;}
+  .sb2{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11.5px;font-weight:600;white-space:nowrap;}
+  .sdot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+  .sb2.pending{background:#FFF3CD;color:#856404;}
+  .sb2.matched{background:#D1E7DD;color:#0A3622;}
+  .sb2.urgent{background:#F8D7DA;color:#58151C;}
 
-  /* ─── BUTTONS ─── */
-  .btn-primary {
-    padding: 10px 22px;
-    background: var(--crimson);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-    box-shadow: 0 3px 12px rgba(193,18,31,0.22);
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .btn-primary:hover { background: var(--crimson-deep); transform: translateY(-1px); }
+  /* MATCH PANEL */
+  .mcard{background:var(--warm-white);border-radius:20px;padding:34px 38px;border:1px solid rgba(0,0,0,.06);
+    box-shadow:0 4px 30px rgba(0,0,0,.05);margin-bottom:28px;position:relative;overflow:hidden;}
+  .mcard::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;
+    background:linear-gradient(90deg,var(--indigo-dark),var(--indigo),#818CF8);}
+  .mcard h3{font-family:'DM Serif Display',serif;font-size:20px;color:var(--charcoal);margin-bottom:18px;}
+  .mcard h3 em{color:var(--indigo);font-style:italic;}
 
-  .btn-indigo {
-    padding: 10px 22px;
-    background: var(--indigo);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.15s;
-    box-shadow: 0 3px 12px rgba(79,70,229,0.25);
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .btn-indigo:hover { background: #3730A3; transform: translateY(-1px); }
+  .mfrow{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin-bottom:18px;}
+  .field{display:flex;flex-direction:column;gap:7px;}
+  .field label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-soft);}
+  .field input,.field select{padding:11px 13px;border:1.5px solid var(--gray-light);border-radius:10px;
+    font-family:'DM Sans',sans-serif;font-size:14px;color:var(--charcoal);background:#fff;outline:none;
+    transition:border-color .2s,box-shadow .2s;width:100%;}
+  .field input:focus,.field select:focus{border-color:var(--indigo);box-shadow:0 0 0 3px rgba(79,70,229,.1);}
+  .field input::placeholder{color:#C0BBBA;}
 
-  .btn-danger {
-    padding: 6px 13px;
-    background: var(--danger-bg);
-    color: var(--danger-text);
-    border: none;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.15s;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    white-space: nowrap;
-  }
-  .btn-danger:hover { background: #FCA5A5; transform: scale(1.04); }
+  /* Match results */
+  .mrwrap{border-radius:16px;border:1px solid rgba(79,70,229,.18);overflow:hidden;
+    box-shadow:0 4px 24px rgba(79,70,229,.1);margin-bottom:28px;display:none;}
+  .mrwrap.vis{display:block;}
+  .mrhead{background:linear-gradient(135deg,var(--indigo-dark),var(--indigo));padding:20px 28px;
+    display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+  .mrhead h4{font-family:'DM Serif Display',serif;font-size:18px;color:#fff;}
+  .mrhead p{font-size:12px;color:rgba(255,255,255,.5);margin-top:3px;}
+  .mpill{background:rgba(255,255,255,.12);color:#fff;padding:5px 14px;border-radius:20px;font-size:13px;font-weight:600;white-space:nowrap;}
+  .mrwrap .tw{border-radius:0;border:none;box-shadow:none;}
+  .mrwrap thead{background:#2D2460;}
 
-  .btn-match {
-    padding: 6px 13px;
-    background: var(--indigo-bg);
-    color: var(--indigo);
-    border: none;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    white-space: nowrap;
-  }
-  .btn-match:hover { background: #C7D2FE; }
+  /* Row count */
+  .rc{display:inline-flex;padding:4px 12px;background:rgba(193,18,31,.08);color:var(--crimson);
+    border-radius:20px;font-size:12px;font-weight:600;}
 
-  .btn-cancel {
-    padding: 10px 22px;
-    background: var(--gray-light);
-    color: var(--charcoal);
-    border: none;
-    border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .btn-cancel:hover { background: #E0DDD8; }
+  code{font-size:12px;background:var(--gray-light);padding:2px 7px;border-radius:5px;font-family:monospace;}
 
-  /* ─── TABLE ─── */
-  .table-wrap {
-    overflow-x: auto;
-    border-radius: 18px;
-    border: 1px solid rgba(0,0,0,0.06);
-    box-shadow: 0 4px 30px rgba(0,0,0,0.05);
-  }
-  table { width: 100%; border-collapse: collapse; background: var(--warm-white); font-size: 13.5px; }
-  thead { background: var(--charcoal); }
-  thead th {
-    padding: 15px 18px;
-    text-align: left;
-    font-size: 10.5px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.55);
-    white-space: nowrap;
-  }
-  .indigo-thead thead { background: var(--indigo-dark); }
-  tbody tr { border-bottom: 1px solid var(--gray-light); transition: background 0.15s; }
-  tbody tr:last-child { border-bottom: none; }
-  tbody tr:hover { background: rgba(193,18,31,0.025); }
-  tbody td { padding: 14px 18px; color: var(--charcoal); white-space: nowrap; }
-  .td-name { font-weight: 600; }
+  /* MODAL */
+  .mo{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);z-index:1000;
+    display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
+  .mo.open{opacity:1;pointer-events:all;}
+  .md{background:var(--warm-white);border-radius:20px;padding:38px;max-width:420px;width:90%;
+    box-shadow:0 20px 60px rgba(0,0,0,.2);transform:translateY(20px);transition:transform .2s;border-top:4px solid var(--crimson);}
+  .md.ii{border-top-color:var(--indigo);}
+  .mo.open .md{transform:translateY(0);}
+  .md h3{font-family:'DM Serif Display',serif;font-size:22px;color:var(--charcoal);margin-bottom:10px;}
+  .md p{color:var(--gray-soft);font-size:14px;line-height:1.6;}
+  .ma{display:flex;gap:12px;margin-top:26px;}
 
-  .blood-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 40px;
-    height: 28px;
-    border-radius: 6px;
-    background: var(--crimson);
-    color: #fff;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 14px;
-    padding: 0 8px;
-  }
+  /* SHIMMER */
+  .sc{height:16px;border-radius:6px;background:linear-gradient(90deg,#f0ede8 25%,#e8e4de 50%,#f0ede8 75%);
+    background-size:200% 100%;animation:sh 1.2s infinite;}
+  @keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
-  .status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 11.5px;
-    font-weight: 600;
-    white-space: nowrap;
-  }
-  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-  .status-badge.pending  { background: #FFF3CD; color: #856404; }
-  .status-badge.matched  { background: #D1E7DD; color: #0A3622; }
-  .status-badge.urgent   { background: #F8D7DA; color: #58151C; }
-  .status-badge.default  { background: #E2E8F0; color: #475569; }
+  /* TOAST */
+  .tc{position:fixed;bottom:30px;right:30px;z-index:9999;display:flex;flex-direction:column;gap:12px;}
+  .toast{padding:14px 20px;border-radius:12px;font-size:13.5px;font-weight:500;color:#fff;min-width:260px;
+    animation:si .3s ease,fo .4s ease 2.6s forwards;display:flex;align-items:center;gap:10px;
+    box-shadow:0 8px 32px rgba(0,0,0,.18);}
+  .toast.success{background:var(--success);}
+  .toast.error{background:var(--crimson);}
+  .toast.info{background:var(--indigo);}
+  @keyframes si{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+  @keyframes fo{to{opacity:0;transform:translateX(40px)}}
 
-  code {
-    font-size: 12px;
-    background: var(--gray-light);
-    padding: 2px 7px;
-    border-radius: 5px;
-    font-family: monospace;
-  }
-
-  .row-count {
-    display: inline-flex;
-    align-items: center;
-    padding: 4px 12px;
-    background: rgba(193,18,31,0.08);
-    color: var(--crimson);
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-  }
-
-  /* ─── MATCHES PANEL ─── */
-  .match-search-card {
-    background: var(--warm-white);
-    border-radius: 20px;
-    padding: 36px 40px;
-    border: 1px solid rgba(0,0,0,0.06);
-    box-shadow: 0 4px 30px rgba(0,0,0,0.05);
-    margin-bottom: 32px;
-    position: relative;
-    overflow: hidden;
-  }
-  .match-search-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--indigo-dark), var(--indigo), #818CF8);
-  }
-  .match-search-card h3 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 22px;
-    color: var(--charcoal);
-    margin-bottom: 20px;
-  }
-  .match-search-card h3 em { color: var(--indigo); font-style: italic; }
-
-  .match-field-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 16px;
-    margin-bottom: 22px;
-  }
-  .field { display: flex; flex-direction: column; gap: 7px; }
-  .field label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--gray-soft);
-  }
-  .field input, .field select {
-    padding: 11px 14px;
-    border: 1.5px solid var(--gray-light);
-    border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    color: var(--charcoal);
-    background: #fff;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    width: 100%;
-  }
-  .field input:focus, .field select:focus {
-    border-color: var(--indigo);
-    box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
-  }
-
-  /* Match results box */
-  .match-results-wrap {
-    border-radius: 18px;
-    border: 1px solid rgba(79,70,229,0.15);
-    overflow: hidden;
-    box-shadow: 0 4px 30px rgba(79,70,229,0.08);
-    margin-bottom: 36px;
-    display: none;
-  }
-  .match-results-wrap.visible { display: block; }
-  .match-results-header {
-    background: linear-gradient(135deg, var(--indigo-dark), var(--indigo));
-    padding: 22px 30px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-  .match-results-header h4 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 20px;
-    color: #fff;
-  }
-  .match-results-header p { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 3px; }
-  .match-count-pill {
-    background: rgba(255,255,255,0.12);
-    color: #fff;
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 600;
-    white-space: nowrap;
-  }
-  .match-results-wrap .table-wrap {
-    border-radius: 0;
-    border: none;
-    box-shadow: none;
-  }
-  .match-results-wrap thead { background: #2D2460; }
-
-  /* Separator */
-  .section-sep {
-    height: 1px;
-    background: var(--gray-light);
-    margin: 36px 0;
-  }
-
-  /* ─── EMPTY STATE ─── */
-  .empty-state { padding: 60px 20px; text-align: center; color: var(--gray-soft); }
-  .empty-state .es-icon { font-size: 42px; margin-bottom: 12px; }
-  .empty-state p { font-size: 14px; font-weight: 300; }
-
-  /* ─── CONFIRM MODAL ─── */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    backdrop-filter: blur(4px);
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s;
-  }
-  .modal-overlay.open { opacity: 1; pointer-events: all; }
-  .modal {
-    background: var(--warm-white);
-    border-radius: 20px;
-    padding: 40px;
-    max-width: 420px;
-    width: 90%;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-    transform: translateY(20px);
-    transition: transform 0.2s;
-    border-top: 4px solid var(--crimson);
-  }
-  .modal.indigo-modal { border-top-color: var(--indigo); }
-  .modal-overlay.open .modal { transform: translateY(0); }
-  .modal h3 { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--charcoal); margin-bottom: 10px; }
-  .modal p { color: var(--gray-soft); font-size: 14px; line-height: 1.6; }
-  .modal-actions { display: flex; gap: 12px; margin-top: 28px; }
-
-  /* ─── SHIMMER ─── */
-  .shimmer-cell {
-    height: 16px;
-    border-radius: 6px;
-    background: linear-gradient(90deg, #f0ede8 25%, #e8e4de 50%, #f0ede8 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.2s infinite;
-  }
-  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-
-  /* ─── TOAST ─── */
-  .toast-container { position: fixed; bottom: 30px; right: 30px; z-index: 9999; display: flex; flex-direction: column; gap: 12px; }
-  .toast {
-    padding: 15px 22px;
-    border-radius: 12px;
-    font-size: 13.5px;
-    font-weight: 500;
-    color: #fff;
-    min-width: 260px;
-    animation: slideIn 0.3s ease, fadeOut 0.4s ease 2.6s forwards;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-  }
-  .toast.success { background: var(--success); }
-  .toast.error   { background: var(--crimson); }
-  .toast.info    { background: var(--indigo); }
-  @keyframes slideIn { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
-  @keyframes fadeOut { to { opacity: 0; transform: translateX(40px); } }
-
-  @media (max-width: 900px) {
-    .hero { padding: 36px 20px 50px; }
-    .main { padding: 28px 16px; }
-    .nav-bar { padding: 0 16px; }
+  @media(max-width:900px){
+    .hero{padding:36px 20px 50px;}
+    .main{padding:28px 16px;}
+    .nav-bar{padding:0 16px;}
   }
 </style>
 </head>
 <body>
 
-<!-- HERO -->
 <header class="hero">
-  <div class="hero-grid"></div>
-  <div class="hero-inner">
-    <div class="hero-text">
-      <div class="eyebrow">Admin Control Panel</div>
+  <div class="hg"></div>
+  <div class="hi">
+    <div class="ht">
+      <div class="ey">Admin Control Panel</div>
       <h1>LIFE<span>FLOW</span></h1>
-      <p>Manage donors, recipients, requests, and donor–recipient matches.</p>
+      <p>Full control over donors, recipients, requests and matches.</p>
     </div>
-    <div class="hero-badges">
-      <div class="hero-badge">
-        <div class="badge-label">Donors</div>
-        <div class="badge-val" id="hstat-donors">—</div>
-      </div>
-      <div class="hero-badge">
-        <div class="badge-label">Recipients</div>
-        <div class="badge-val" id="hstat-recipients">—</div>
-      </div>
-      <div class="hero-badge">
-        <div class="badge-label">Requests</div>
-        <div class="badge-val" id="hstat-requests">—</div>
-      </div>
-      <div class="hero-badge match-badge">
-        <div class="badge-label">Matched</div>
-        <div class="badge-val" id="hstat-matched">—</div>
-      </div>
+    <div class="hbadges">
+      <div class="hbadge"><div class="bl">Donors</div><div class="bv" id="hs-d">—</div></div>
+      <div class="hbadge"><div class="bl">Recipients</div><div class="bv" id="hs-r">—</div></div>
+      <div class="hbadge"><div class="bl">Requests</div><div class="bv" id="hs-rq">—</div></div>
+      <div class="hbadge ib"><div class="bl">Matches</div><div class="bv" id="hs-m">—</div></div>
     </div>
   </div>
 </header>
 
-<!-- NAV -->
 <nav class="nav-bar">
-  <div class="nav-tab active" onclick="switchTab('donor', this)">
-    <span class="tab-icon">🩸</span> Donors
-  </div>
-  <div class="nav-tab" onclick="switchTab('recipient', this)">
-    <span class="tab-icon">🏥</span> Recipients
-  </div>
-  <div class="nav-tab" onclick="switchTab('request', this)">
-    <span class="tab-icon">📋</span> Requests
-  </div>
-  <div class="nav-tab match-tab" onclick="switchTab('matches', this)">
-    <span class="tab-icon">🔗</span> Matches
-  </div>
+  <div class="nav-tab active" onclick="switchTab('donor',this)"><span class="ti">🩸</span>Donors</div>
+  <div class="nav-tab" onclick="switchTab('recipient',this)"><span class="ti">🏥</span>Recipients</div>
+  <div class="nav-tab" onclick="switchTab('request',this)"><span class="ti">📋</span>Requests</div>
+  <div class="nav-tab im" onclick="switchTab('matches',this)"><span class="ti">🔗</span>Matches</div>
 </nav>
 
 <main class="main">
 
-  <!-- ══ DONORS ══ -->
+  <!-- ═══ DONORS ═══ -->
   <div class="panel active" id="panel-donor">
-    <div class="panel-header">
-      <div class="panel-header-left">
-        <h2>Donor <em>Registry</em></h2>
-        <p>View, search, and remove registered blood donors.</p>
-      </div>
-      <div class="toolbar">
-        <div class="search-box">
-          <span class="si">🔍</span>
-          <input type="text" placeholder="Search donors…" oninput="filterTable('donor_table', this.value)">
-        </div>
-        <span class="row-count" id="donor-count">— records</span>
-        <button class="btn-primary" onclick="loadDonors()">↻ Refresh</button>
+    <div class="ph">
+      <div class="phl"><h2>Donor <em>Registry</em></h2><p>Manage all registered blood donors.</p></div>
+      <div class="tb">
+        <div class="sb"><span class="si">🔍</span><input type="text" placeholder="Search donors…" oninput="liveFilter('dt',this.value)"></div>
+        <span class="rc" id="rc-d">— records</span>
+        <button class="bp" onclick="loadDonors()">↻ Refresh</button>
       </div>
     </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Donor ID</th><th>Name</th><th>Blood Group</th><th>Age</th>
-            <th>Gender</th><th>Phone</th><th>City</th><th>Last Donation</th><th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="donor_table">
-          <tr><td colspan="9"><div class="empty-state"><div class="es-icon">🩸</div><p>Click Refresh to load donors</p></div></td></tr>
-        </tbody>
-      </table>
+    <div class="tw">
+      <table><thead><tr>
+        <th>Donor ID</th><th>Name</th><th>Blood Group</th><th>Age</th>
+        <th>Gender</th><th>Phone</th><th>City</th><th>Last Donation</th><th>Action</th>
+      </tr></thead>
+      <tbody id="dt"><tr class="er"><td colspan="9">Click Refresh to load donors</td></tr></tbody></table>
     </div>
   </div>
 
-  <!-- ══ RECIPIENTS ══ -->
+  <!-- ═══ RECIPIENTS ═══ -->
   <div class="panel" id="panel-recipient">
-    <div class="panel-header">
-      <div class="panel-header-left">
-        <h2>Recipient <em>List</em></h2>
-        <p>View, search, and remove registered recipients.</p>
-      </div>
-      <div class="toolbar">
-        <div class="search-box">
-          <span class="si">🔍</span>
-          <input type="text" placeholder="Search recipients…" oninput="filterTable('recipient_table', this.value)">
-        </div>
-        <span class="row-count" id="recipient-count">— records</span>
-        <button class="btn-primary" onclick="loadRecipients()">↻ Refresh</button>
+    <div class="ph">
+      <div class="phl"><h2>Recipient <em>List</em></h2><p>Manage all registered recipients.</p></div>
+      <div class="tb">
+        <div class="sb"><span class="si">🔍</span><input type="text" placeholder="Search recipients…" oninput="liveFilter('rt',this.value)"></div>
+        <span class="rc" id="rc-r">— records</span>
+        <button class="bp" onclick="loadRecipients()">↻ Refresh</button>
       </div>
     </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Recipient ID</th><th>Name</th><th>Blood Group</th><th>Age</th>
-            <th>Gender</th><th>Phone</th><th>City</th><th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="recipient_table">
-          <tr><td colspan="8"><div class="empty-state"><div class="es-icon">🏥</div><p>Click Refresh to load recipients</p></div></td></tr>
-        </tbody>
-      </table>
+    <div class="tw">
+      <table><thead><tr>
+        <th>Recipient ID</th><th>Name</th><th>Blood Group</th><th>Age</th>
+        <th>Gender</th><th>Phone</th><th>City</th><th>Action</th>
+      </tr></thead>
+      <tbody id="rt"><tr class="er"><td colspan="8">Click Refresh to load recipients</td></tr></tbody></table>
     </div>
   </div>
 
-  <!-- ══ REQUESTS ══ -->
+  <!-- ═══ REQUESTS ═══ -->
   <div class="panel" id="panel-request">
-    <div class="panel-header">
-      <div class="panel-header-left">
-        <h2>Blood <em>Requests</em></h2>
-        <p>Track, manage, and remove blood requests.</p>
-      </div>
-      <div class="toolbar">
-        <div class="search-box">
-          <span class="si">🔍</span>
-          <input type="text" placeholder="Search requests…" oninput="filterTable('request_table', this.value)">
-        </div>
-        <span class="row-count" id="request-count">— records</span>
-        <button class="btn-primary" onclick="loadRequests()">↻ Refresh</button>
+    <div class="ph">
+      <div class="phl"><h2>Blood <em>Requests</em></h2><p>Track and remove blood requests.</p></div>
+      <div class="tb">
+        <div class="sb"><span class="si">🔍</span><input type="text" placeholder="Search requests…" oninput="liveFilter('rqt',this.value)"></div>
+        <span class="rc" id="rc-rq">— records</span>
+        <button class="bp" onclick="loadRequests()">↻ Refresh</button>
       </div>
     </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Request ID</th><th>Recipient ID</th><th>Blood Group</th>
-            <th>Date</th><th>City</th><th>Status</th><th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="request_table">
-          <tr><td colspan="7"><div class="empty-state"><div class="es-icon">📋</div><p>Click Refresh to load requests</p></div></td></tr>
-        </tbody>
-      </table>
+    <div class="tw">
+      <table><thead><tr>
+        <th>Request ID</th><th>Recipient ID</th><th>Blood Group</th>
+        <th>Date</th><th>City</th><th>Status</th><th>Action</th>
+      </tr></thead>
+      <tbody id="rqt"><tr class="er"><td colspan="7">Click Refresh to load requests</td></tr></tbody></table>
     </div>
   </div>
 
-  <!-- ══ MATCHES ══ -->
+  <!-- ═══ MATCHES ═══ -->
   <div class="panel" id="panel-matches">
-    <div class="panel-header">
-      <div class="panel-header-left">
-        <h2>Donor–Recipient <em class="indigo">Matches</em></h2>
-        <p>Search for compatible donors and record confirmed pairings.</p>
-      </div>
-      <div class="toolbar">
-        <button class="btn-indigo" onclick="loadAllMatches()">📋 Load All Matches</button>
-      </div>
+    <div class="ph">
+      <div class="phl"><h2>Donor–Recipient <em class="ii">Matches</em></h2><p>Find compatible donors and record confirmed pairings.</p></div>
+      <button class="bi" onclick="loadAllMatches()">📋 All Matches</button>
     </div>
 
-    <!-- Search form -->
-    <div class="match-search-card">
-      <h3>Find <em>Compatible Donors</em></h3>
-      <div class="match-field-row">
+    <!-- Step 1: search for compatible donors -->
+    <div class="mcard">
+      <h3>Step 1 — Find <em>Compatible Donors</em></h3>
+      <div class="mfrow">
         <div class="field">
           <label>Blood Group Needed</label>
-          <select id="match_group">
+          <select id="mg">
             <option value="">Any Group</option>
-            <option>A+</option><option>A-</option>
-            <option>B+</option><option>B-</option>
-            <option>AB+</option><option>AB-</option>
-            <option>O+</option><option>O-</option>
+            <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+            <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
           </select>
         </div>
-        <div class="field">
-          <label>City</label>
-          <input id="match_city" placeholder="e.g. Delhi">
-        </div>
-        <div class="field">
-          <label>Recipient ID <span style="font-weight:300;text-transform:none;letter-spacing:0">(for confirming)</span></label>
-          <input id="match_recipient" placeholder="e.g. RCP-001">
-        </div>
+        <div class="field"><label>City (optional)</label><input id="mc" placeholder="e.g. Delhi"></div>
+        <div class="field"><label>Recipient ID (for matching)</label><input id="mrid" placeholder="e.g. RCP-001"></div>
       </div>
-      <button class="btn-indigo" onclick="findMatches()">🔍 Find Compatible Donors</button>
-    </div>
-
-    <!-- Search results -->
-    <div class="match-results-wrap" id="match-results-wrap">
-      <div class="match-results-header">
-        <div>
-          <h4 id="match-result-title">Compatible Donors</h4>
-          <p id="match-result-sub">Filtered results</p>
-        </div>
-        <div class="match-count-pill" id="match-count-pill">0 found</div>
-      </div>
-      <div class="table-wrap" style="border-radius:0;border:none;box-shadow:none">
-        <table>
-          <thead style="background:#2D2460">
-            <tr>
-              <th>Donor ID</th><th>Name</th><th>Blood Group</th><th>Age</th>
-              <th>Phone</th><th>City</th><th>Last Donation</th><th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="match_results_table"></tbody>
-        </table>
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <button class="bi" onclick="findCompatible()">🔍 Find Donors</button>
+        <button class="bc" onclick="clearMatchSearch()">✕ Clear</button>
+        <span id="match-hint" style="font-size:13px;color:var(--gray-soft)">Enter a blood group or city to search</span>
       </div>
     </div>
 
-    <div class="section-sep"></div>
+    <!-- Results -->
+    <div class="mrwrap" id="mrwrap">
+      <div class="mrhead">
+        <div><h4 id="mr-title">Compatible Donors</h4><p id="mr-sub"></p></div>
+        <div class="mpill" id="mr-pill">0 found</div>
+      </div>
+      <div class="tw">
+        <table><thead><tr>
+          <th>Donor ID</th><th>Name</th><th>Blood Group</th><th>Age</th>
+          <th>Phone</th><th>City</th><th>Last Donation</th><th>Action</th>
+        </tr></thead>
+        <tbody id="mrt"></tbody></table>
+      </div>
+    </div>
 
-    <!-- All matches table -->
+    <!-- Step 2: all matches -->
     <div id="all-matches-section" style="display:none">
-      <div class="panel-header">
-        <div class="panel-header-left">
-          <h2 style="font-size:26px">All Recorded <em class="indigo">Matches</em></h2>
-          <p>Every confirmed donor–recipient pairing in the system.</p>
-        </div>
-        <div class="toolbar">
-          <div class="search-box">
-            <span class="si">🔍</span>
-            <input type="text" placeholder="Search matches…" oninput="filterTable('all_match_table', this.value)">
-          </div>
-          <span class="row-count" id="all-match-count">— records</span>
+      <div class="ph" style="margin-top:8px">
+        <div class="phl"><h2 style="font-size:26px">Recorded <em class="ii">Matches</em></h2><p>All confirmed donor–recipient pairings.</p></div>
+        <div class="tb">
+          <div class="sb"><span class="si">🔍</span><input type="text" placeholder="Search matches…" oninput="liveFilter('amt',this.value)"></div>
+          <span class="rc" id="rc-m">— records</span>
         </div>
       </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Match ID</th><th>Donor ID</th><th>Donor Name</th>
-              <th>Recipient ID</th><th>Recipient Name</th><th>Blood Group</th>
-              <th>Match Date</th><th>City</th><th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="all_match_table">
-            <tr><td colspan="9"><div class="empty-state"><div class="es-icon">🔗</div><p>No matches recorded yet</p></div></td></tr>
-          </tbody>
-        </table>
+      <div class="tw">
+        <table><thead><tr>
+          <th>Match ID</th><th>Donor ID</th><th>Donor</th>
+          <th>Recipient ID</th><th>Recipient</th><th>Blood Group</th>
+          <th>Date</th><th>City</th><th>Action</th>
+        </tr></thead>
+        <tbody id="amt"><tr class="er"><td colspan="9">No matches recorded yet</td></tr></tbody></table>
       </div>
     </div>
   </div>
 
 </main>
 
-<!-- CONFIRM MODAL -->
-<div class="modal-overlay" id="modal-overlay">
-  <div class="modal" id="modal-box">
-    <h3 id="modal-title">Confirm</h3>
-    <p id="modal-msg"></p>
-    <div class="modal-actions">
-      <button class="btn-primary" id="modal-confirm">Confirm</button>
-      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+<!-- MODAL -->
+<div class="mo" id="mo">
+  <div class="md" id="md">
+    <h3 id="mt">Confirm</h3>
+    <p id="mm"></p>
+    <div class="ma">
+      <button class="bp" id="mc-btn">Confirm</button>
+      <button class="bc" onclick="closeModal()">Cancel</button>
     </div>
   </div>
 </div>
 
-<div class="toast-container" id="toast-container"></div>
+<div class="tc" id="tc"></div>
 
 <script>
-/* ── Demo data ── */
-const demo = {
-  donors: [
-    { donor_id:'DNR-001', name:'Arjun Sharma',  blood_group:'O+', age:28, gender:'Male',   phone:'+91 98765 43210', city:'Faridabad', last_donation_date:'2024-11-10' },
-    { donor_id:'DNR-002', name:'Priya Mehta',   blood_group:'A+', age:32, gender:'Female', phone:'+91 91234 56789', city:'Delhi',     last_donation_date:'2025-01-05' },
-    { donor_id:'DNR-003', name:'Ravi Kumar',    blood_group:'B-', age:24, gender:'Male',   phone:'+91 99887 76655', city:'Gurugram',  last_donation_date:'2024-09-20' },
-    { donor_id:'DNR-004', name:'Anjali Singh',  blood_group:'O+', age:29, gender:'Female', phone:'+91 90123 45678', city:'Delhi',     last_donation_date:'2025-02-14' },
-  ],
-  recipients: [
-    { recipient_id:'RCP-001', name:'Sunita Verma', blood_group:'O+', age:45, gender:'Female', phone:'+91 90112 23344', city:'Faridabad' },
-    { recipient_id:'RCP-002', name:'Mohan Das',    blood_group:'A+', age:60, gender:'Male',   phone:'+91 97766 55443', city:'Delhi' },
-  ],
-  requests: [
-    { request_id:'REQ-001', recipient_id:'RCP-001', blood_group:'O+', request_date:'2025-03-20', city:'Faridabad', status:'matched' },
-    { request_id:'REQ-002', recipient_id:'RCP-002', blood_group:'A+', request_date:'2025-03-27', city:'Delhi',     status:'pending' },
-    { request_id:'REQ-003', recipient_id:'RCP-001', blood_group:'O+', request_date:'2025-03-29', city:'Gurugram',  status:'urgent'  },
-  ],
-  matches: [
-    { match_id:'MCH-001', donor_id:'DNR-001', donor_name:'Arjun Sharma', recipient_id:'RCP-001', recipient_name:'Sunita Verma', blood_group:'O+', match_date:'2025-03-22', city:'Faridabad' },
-  ]
-};
+/* ══════════════════════════════════════════════
+   LOCAL DATA STORE  (syncs with backend on load)
+══════════════════════════════════════════════ */
+const DB = { donors:[], recipients:[], requests:[], matches:[] };
 
-/* ── Tab switching ── */
-function switchTab(name, el) {
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('panel-' + name).classList.add('active');
-  updateHeroStats();
+/* ── helpers ── */
+const $ = id => document.getElementById(id);
+const val = id => $(id)?.value || '';
+const setText = (id,v) => { const e=$(id); if(e) e.textContent=v; };
+const chip = v => `<code>${v}</code>`;
+const blood = g => `<span class="bb">${g}</span>`;
+const delay = ms => new Promise(r=>setTimeout(r,ms));
+const esc   = s  => String(s).replace(/'/g,"\\'");
+
+function sbadge(s){
+  const m={pending:'Pending',matched:'Matched',urgent:'Urgent'};
+  const c=['pending','matched','urgent'].includes(s)?s:'pending';
+  return `<span class="sb2 ${c}"><span class="sdot"></span>${m[s]||s}</span>`;
 }
 
-/* ── Toast ── */
-function toast(msg, type = 'success') {
-  const icons = { success:'✅', error:'❌', info:'🔗' };
-  const t = document.createElement('div');
-  t.className = `toast ${type}`;
-  t.innerHTML = `<span>${icons[type]||'ℹ️'}</span> ${msg}`;
-  document.getElementById('toast-container').appendChild(t);
-  setTimeout(() => t.remove(), 3200);
-}
-
-/* ── Modal ── */
-function openModal(title, msg, confirmLabel, confirmStyle, onConfirm, indigo = false) {
-  document.getElementById('modal-title').textContent = title;
-  document.getElementById('modal-msg').textContent = msg;
-  const btn = document.getElementById('modal-confirm');
-  btn.textContent = confirmLabel;
-  btn.style.background = confirmStyle;
-  btn.onclick = () => { closeModal(); onConfirm(); };
-  document.getElementById('modal-box').className = indigo ? 'modal indigo-modal' : 'modal';
-  document.getElementById('modal-overlay').classList.add('open');
-}
-function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
-document.getElementById('modal-overlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
-
-/* ── Hero stats ── */
-function updateHeroStats() {
-  document.getElementById('hstat-donors').textContent     = demo.donors.length;
-  document.getElementById('hstat-recipients').textContent = demo.recipients.length;
-  document.getElementById('hstat-requests').textContent   = demo.requests.length;
-  document.getElementById('hstat-matched').textContent    = demo.matches.length;
-}
-
-/* ── Shimmer ── */
-function showShimmer(id, cols) {
-  document.getElementById(id).innerHTML = Array(4).fill(0).map(() =>
-    `<tr>${Array(cols).fill(0).map(() =>
-      `<td><div class="shimmer-cell" style="width:${55+Math.random()*40}%"></div></td>`
+function shimmer(id,cols){
+  $(id).innerHTML=Array(4).fill(0).map(()=>
+    `<tr>${Array(cols).fill(0).map(()=>
+      `<td><div class="sc" style="width:${55+Math.random()*38}%"></div></td>`
     ).join('')}</tr>`
   ).join('');
 }
 
-/* ── Helpers ── */
-const delay = ms => new Promise(r => setTimeout(r, ms));
-const chip = v => `<code>${v}</code>`;
-const blood = g => `<span class="blood-badge">${g}</span>`;
-const statusBadge = s => {
-  const labels = { pending:'Pending', matched:'Matched', urgent:'Urgent' };
-  const cls = ['pending','matched','urgent'].includes(s) ? s : 'default';
-  return `<span class="status-badge ${cls}"><span class="status-dot"></span>${labels[s]||s||'Unknown'}</span>`;
-};
-function filterTable(id, q) {
-  document.getElementById(id).querySelectorAll('tr').forEach(r => {
-    r.style.display = r.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
+function toast(msg,type='success'){
+  const icons={success:'✅',error:'❌',info:'🔗'};
+  const t=document.createElement('div');
+  t.className=`toast ${type}`;
+  t.innerHTML=`<span>${icons[type]||'ℹ️'}</span> ${msg}`;
+  $('tc').appendChild(t);
+  setTimeout(()=>t.remove(),3200);
+}
+
+function openModal(title,msg,label,style,cb,indigo=false){
+  $('mt').textContent=title;
+  $('mm').textContent=msg;
+  const b=$('mc-btn');
+  b.textContent=label; b.style.background=style;
+  b.onclick=()=>{closeModal();cb();};
+  $('md').className=indigo?'md ii':'md';
+  $('mo').classList.add('open');
+}
+function closeModal(){$('mo').classList.remove('open');}
+$('mo').addEventListener('click',e=>{if(e.target===$('mo'))closeModal();});
+
+function switchTab(name,el){
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  $('panel-'+name).classList.add('active');
+  updateStats();
+}
+
+function updateStats(){
+  setText('hs-d',  DB.donors.length);
+  setText('hs-r',  DB.recipients.length);
+  setText('hs-rq', DB.requests.length);
+  setText('hs-m',  DB.matches.length);
+}
+
+function liveFilter(tbodyId,q){
+  $(tbodyId).querySelectorAll('tr').forEach(r=>{
+    r.style.display=r.textContent.toLowerCase().includes(q.toLowerCase())?'':'none';
   });
 }
 
-/* ══════════════════════════════════════
+/* ══════════════════════════════════════════════
    DONORS
-══════════════════════════════════════ */
-async function loadDonors() {
-  showShimmer('donor_table', 9);
-  await delay(400);
-  try {
-    const res = await fetch('/all_donors');
-    const data = await res.json();
-    renderDonors(data.donors);
-  } catch { renderDonors(demo.donors); }
+══════════════════════════════════════════════ */
+async function loadDonors(){
+  shimmer('dt',9);
+  await delay(350);
+  try{
+    const res=await fetch('/all_donors');
+    const d=await res.json();
+    DB.donors=d.donors||[];
+  }catch{ /* keep whatever is in DB */ }
+  renderDonors();
 }
 
-function renderDonors(list) {
-  const el = document.getElementById('donor_table');
-  document.getElementById('donor-count').textContent = `${list.length} record${list.length !== 1 ? 's' : ''}`;
-  if (!list.length) {
-    el.innerHTML = '<tr><td colspan="9"><div class="empty-state"><div class="es-icon">🩸</div><p>No donors found</p></div></td></tr>';
-    return;
-  }
-  el.innerHTML = list.map(d => `
+function renderDonors(){
+  const el=$('dt');
+  const list=DB.donors;
+  setText('rc-d',`${list.length} record${list.length!==1?'s':''}`);
+  if(!list.length){el.innerHTML='<tr class="er"><td colspan="9">No donors found</td></tr>';return;}
+  el.innerHTML=list.map(d=>`
     <tr>
       <td>${chip(d.donor_id)}</td>
-      <td class="td-name">${d.name}</td>
+      <td class="tdn">${d.name}</td>
       <td>${blood(d.blood_group)}</td>
       <td>${d.age}</td><td>${d.gender}</td><td>${d.phone}</td><td>${d.city}</td>
-      <td>${d.last_donation_date || '—'}</td>
-      <td><button class="btn-danger" onclick="askDeleteDonor('${d.donor_id}','${esc(d.name)}')">🗑 Delete</button></td>
+      <td>${d.last_donation_date||'—'}</td>
+      <td><button class="bd" onclick="askDel('donor','${esc(d.donor_id)}','${esc(d.name)}')">🗑 Delete</button></td>
     </tr>`).join('');
-  updateHeroStats();
+  updateStats();
 }
 
-function askDeleteDonor(id, name) {
-  openModal('⚠️ Delete Donor', `Remove "${name}" from the donor registry? This cannot be undone.`,
-    '🗑 Delete', 'var(--crimson)', () => deleteDonor(id, name));
-}
-async function deleteDonor(id, name) {
-  try {
-    const res = await fetch(`/delete_donor/${id}`, { method:'DELETE' });
-    const d = await res.json();
-    toast(d.message || 'Donor deleted.');
-  } catch {
-    demo.donors = demo.donors.filter(d => d.donor_id !== id);
-    toast(`${name} removed.`);
-  }
-  loadDonors();
-}
-
-/* ══════════════════════════════════════
+/* ══════════════════════════════════════════════
    RECIPIENTS
-══════════════════════════════════════ */
-async function loadRecipients() {
-  showShimmer('recipient_table', 8);
-  await delay(400);
-  try {
-    const res = await fetch('/all_recipients');
-    const data = await res.json();
-    renderRecipients(data.recipients);
-  } catch { renderRecipients(demo.recipients); }
+══════════════════════════════════════════════ */
+async function loadRecipients(){
+  shimmer('rt',8);
+  await delay(350);
+  try{
+    const res=await fetch('/all_recipients');
+    const d=await res.json();
+    DB.recipients=d.recipients||[];
+  }catch{}
+  renderRecipients();
 }
 
-function renderRecipients(list) {
-  const el = document.getElementById('recipient_table');
-  document.getElementById('recipient-count').textContent = `${list.length} record${list.length !== 1 ? 's' : ''}`;
-  if (!list.length) {
-    el.innerHTML = '<tr><td colspan="8"><div class="empty-state"><div class="es-icon">🏥</div><p>No recipients found</p></div></td></tr>';
-    return;
-  }
-  el.innerHTML = list.map(r => `
+function renderRecipients(){
+  const el=$('rt');
+  const list=DB.recipients;
+  setText('rc-r',`${list.length} record${list.length!==1?'s':''}`);
+  if(!list.length){el.innerHTML='<tr class="er"><td colspan="8">No recipients found</td></tr>';return;}
+  el.innerHTML=list.map(r=>`
     <tr>
       <td>${chip(r.recipient_id)}</td>
-      <td class="td-name">${r.name}</td>
+      <td class="tdn">${r.name}</td>
       <td>${blood(r.blood_group)}</td>
       <td>${r.age}</td><td>${r.gender}</td><td>${r.phone}</td><td>${r.city}</td>
-      <td><button class="btn-danger" onclick="askDeleteRecipient('${r.recipient_id}','${esc(r.name)}')">🗑 Delete</button></td>
+      <td><button class="bd" onclick="askDel('recipient','${esc(r.recipient_id)}','${esc(r.name)}')">🗑 Delete</button></td>
     </tr>`).join('');
-  updateHeroStats();
+  updateStats();
 }
 
-function askDeleteRecipient(id, name) {
-  openModal('⚠️ Delete Recipient', `Remove "${name}" from the recipient list? This cannot be undone.`,
-    '🗑 Delete', 'var(--crimson)', () => deleteRecipient(id, name));
-}
-async function deleteRecipient(id, name) {
-  try {
-    const res = await fetch(`/delete_recipient/${id}`, { method:'DELETE' });
-    const d = await res.json();
-    toast(d.message || 'Recipient deleted.');
-  } catch {
-    demo.recipients = demo.recipients.filter(r => r.recipient_id !== id);
-    toast(`${name} removed.`);
-  }
-  loadRecipients();
-}
-
-/* ══════════════════════════════════════
+/* ══════════════════════════════════════════════
    REQUESTS
-══════════════════════════════════════ */
-async function loadRequests() {
-  showShimmer('request_table', 7);
-  await delay(400);
-  try {
-    const res = await fetch('/all_requests');
-    const data = await res.json();
-    renderRequests(data.requests);
-  } catch { renderRequests(demo.requests); }
+══════════════════════════════════════════════ */
+async function loadRequests(){
+  shimmer('rqt',7);
+  await delay(350);
+  try{
+    const res=await fetch('/all_requests');
+    const d=await res.json();
+    DB.requests=d.requests||[];
+  }catch{}
+  renderRequests();
 }
 
-function renderRequests(list) {
-  const el = document.getElementById('request_table');
-  document.getElementById('request-count').textContent = `${list.length} record${list.length !== 1 ? 's' : ''}`;
-  if (!list.length) {
-    el.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="es-icon">📋</div><p>No requests found</p></div></td></tr>';
-    return;
-  }
-  el.innerHTML = list.map(r => `
+function renderRequests(){
+  const el=$('rqt');
+  const list=DB.requests;
+  setText('rc-rq',`${list.length} record${list.length!==1?'s':''}`);
+  if(!list.length){el.innerHTML='<tr class="er"><td colspan="7">No requests found</td></tr>';return;}
+  el.innerHTML=list.map(r=>`
     <tr>
       <td>${chip(r.request_id)}</td>
       <td>${r.recipient_id}</td>
       <td>${blood(r.blood_group)}</td>
-      <td>${r.request_date || '—'}</td><td>${r.city}</td>
-      <td>${statusBadge(r.status)}</td>
-      <td><button class="btn-danger" onclick="askDeleteRequest('${r.request_id}')">🗑 Delete</button></td>
+      <td>${r.request_date||'—'}</td><td>${r.city}</td>
+      <td>${sbadge(r.status)}</td>
+      <td><button class="bd" onclick="askDel('request','${esc(r.request_id)}','${esc(r.request_id)}')">🗑 Delete</button></td>
     </tr>`).join('');
-  updateHeroStats();
+  updateStats();
 }
 
-function askDeleteRequest(id) {
-  openModal('⚠️ Delete Request', `Permanently remove request "${id}"? This cannot be undone.`,
-    '🗑 Delete', 'var(--crimson)', () => deleteRequest(id));
+/* ══════════════════════════════════════════════
+   DELETE (unified)
+══════════════════════════════════════════════ */
+const delConfig = {
+  donor:     { url: id=>`/delete_donor/${id}`,     reload: ()=>{loadDonors();},     label: 'donor' },
+  recipient: { url: id=>`/delete_recipient/${id}`, reload: ()=>{loadRecipients();}, label: 'recipient' },
+  request:   { url: id=>`/delete_request/${id}`,   reload: ()=>{loadRequests();},   label: 'request' },
+  match:     { url: id=>`/delete_match/${id}`,     reload: ()=>{loadAllMatches();}, label: 'match' },
+};
+
+function askDel(type, id, name){
+  const cfg=delConfig[type];
+  openModal(`⚠️ Delete ${cap(cfg.label)}`,
+    `Remove "${name}" permanently? This cannot be undone.`,
+    '🗑 Delete','var(--crimson)',
+    ()=>doDelete(type,id,name)
+  );
 }
-async function deleteRequest(id) {
-  try {
-    const res = await fetch(`/delete_request/${id}`, { method:'DELETE' });
-    const d = await res.json();
-    toast(d.message || 'Request deleted.');
-  } catch {
-    demo.requests = demo.requests.filter(r => r.request_id !== id);
-    toast(`Request ${id} removed.`);
+
+async function doDelete(type,id,name){
+  const cfg=delConfig[type];
+  try{
+    const res=await fetch(cfg.url(id),{method:'DELETE'});
+    const d=await res.json();
+    toast(d.message||`${cap(cfg.label)} deleted.`);
+  }catch{
+    // remove from local DB
+    if(type==='donor')     DB.donors     = DB.donors.filter(d=>d.donor_id!==id);
+    if(type==='recipient') DB.recipients = DB.recipients.filter(r=>r.recipient_id!==id);
+    if(type==='request')   DB.requests   = DB.requests.filter(r=>r.request_id!==id);
+    if(type==='match')     DB.matches    = DB.matches.filter(m=>m.match_id!==id);
+    toast(`${name} removed.`);
   }
-  loadRequests();
+  cfg.reload();
 }
 
-/* ══════════════════════════════════════
-   MATCHES — FIND
-══════════════════════════════════════ */
-async function findMatches() {
-  const group = document.getElementById('match_group').value.trim();
-  const city  = document.getElementById('match_city').value.trim();
-  if (!group && !city) return toast('Enter a blood group or city to search.', 'error');
+/* ══════════════════════════════════════════════
+   MATCHES — FIND COMPATIBLE
+══════════════════════════════════════════════ */
+function findCompatible(){
+  const group = val('mg').trim();
+  const city  = val('mc').trim().toLowerCase();
+  const rid   = val('mrid').trim();
 
-  showShimmer('match_results_table', 8);
-  document.getElementById('match-results-wrap').classList.add('visible');
-  await delay(400);
-
-  try {
-    const params = new URLSearchParams({ blood_group: group, city });
-    const res = await fetch(`/find_matches?${params}`);
-    const data = await res.json();
-    renderMatchResults(data.donors || [], group, city);
-  } catch {
-    let results = [...demo.donors];
-    if (group) results = results.filter(d => d.blood_group === group);
-    if (city)  results = results.filter(d => d.city.toLowerCase().includes(city.toLowerCase()));
-    renderMatchResults(results, group, city);
-  }
-}
-
-function renderMatchResults(list, group, city) {
-  const el = document.getElementById('match_results_table');
-  const title = `Compatible Donors${group ? ' — ' + group : ''}${city ? ' in ' + city : ''}`;
-  document.getElementById('match-result-title').textContent = title;
-  document.getElementById('match-result-sub').textContent = `${list.length} donor${list.length !== 1 ? 's' : ''} available`;
-  document.getElementById('match-count-pill').textContent = `${list.length} found`;
-
-  if (!list.length) {
-    el.innerHTML = '<tr><td colspan="8"><div class="empty-state"><div class="es-icon">🔍</div><p>No compatible donors found for these filters</p></div></td></tr>';
+  if(!group && !city){
+    $('match-hint').textContent = '⚠ Enter at least a blood group or city.';
+    $('match-hint').style.color = 'var(--crimson)';
     return;
   }
-  el.innerHTML = list.map(d => `
+  $('match-hint').textContent = '';
+
+  // Filter from loaded donors
+  let results = [...DB.donors];
+  if(group) results = results.filter(d => d.blood_group === group);
+  if(city)  results = results.filter(d => d.city.toLowerCase().includes(city));
+
+  // Show results panel
+  $('mrwrap').classList.add('vis');
+  $('mr-title').textContent = `Compatible Donors${group?' — '+group:''}${city?' in '+cap(city):''}`;
+  $('mr-sub').textContent   = `${results.length} donor${results.length!==1?'s':''} available${rid?' · will link to '+rid:''}`;
+  $('mr-pill').textContent  = `${results.length} found`;
+
+  const tbody=$('mrt');
+  if(!results.length){
+    tbody.innerHTML='<tr class="er"><td colspan="8">No compatible donors found — try a different group or city</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML=results.map(d=>`
     <tr>
       <td>${chip(d.donor_id)}</td>
-      <td class="td-name">${d.name}</td>
+      <td class="tdn">${d.name}</td>
       <td>${blood(d.blood_group)}</td>
       <td>${d.age}</td><td>${d.phone}</td><td>${d.city}</td>
-      <td>${d.last_donation_date || '—'}</td>
-      <td><button class="btn-match" onclick="askConfirmMatch('${d.donor_id}','${esc(d.name)}')">🔗 Confirm Match</button></td>
+      <td>${d.last_donation_date||'—'}</td>
+      <td><button class="bm" onclick="askMatch('${esc(d.donor_id)}','${esc(d.name)}','${esc(rid)}')">🔗 Confirm Match</button></td>
     </tr>`).join('');
 }
 
-/* ══════════════════════════════════════
-   MATCHES — CONFIRM & RECORD
-══════════════════════════════════════ */
-function askConfirmMatch(donorId, donorName) {
-  const recipId = document.getElementById('match_recipient').value.trim() || '(no recipient selected)';
+function clearMatchSearch(){
+  $('mg').selectedIndex=0; $('mc').value=''; $('mrid').value='';
+  $('mrwrap').classList.remove('vis');
+  $('match-hint').textContent='Enter a blood group or city to search';
+  $('match-hint').style.color='';
+}
+
+function askMatch(donorId, donorName, recipId){
+  const recipLabel = recipId || '(no recipient selected)';
   openModal('🔗 Confirm Match',
-    `Link donor "${donorName}" with recipient "${recipId}"? This will be saved as a confirmed match.`,
-    '🔗 Confirm', 'var(--indigo)',
-    () => recordMatch(donorId, donorName, document.getElementById('match_recipient').value.trim()),
+    `Link donor "${donorName}" (${donorId}) with recipient "${recipLabel}"? This will be recorded as a confirmed match.`,
+    '🔗 Confirm','var(--indigo)',
+    ()=>recordMatch(donorId,donorName,recipId),
     true
   );
 }
 
-async function recordMatch(donorId, donorName, recipId) {
-  const matchId = 'MCH-' + String(demo.matches.length + 1).padStart(3, '0');
+async function recordMatch(donorId,donorName,recipId){
+  const matchId = 'MCH-'+String(DB.matches.length+1).padStart(3,'0');
   const today   = new Date().toISOString().split('T')[0];
-  const donor   = demo.donors.find(d => d.donor_id === donorId);
-  const recip   = demo.recipients.find(r => r.recipient_id === recipId);
+  const donor   = DB.donors.find(d=>d.donor_id===donorId);
+  const recip   = DB.recipients.find(r=>r.recipient_id===recipId);
 
-  try {
-    const res = await fetch('/create_match', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ match_id: matchId, donor_id: donorId, recipient_id: recipId, match_date: today, city: donor?.city || '' })
-    });
-    const data = await res.json();
-    toast(data.message || 'Match recorded!', 'info');
-  } catch {
-    demo.matches.push({
-      match_id: matchId,
-      donor_id: donorId,
-      donor_name: donorName,
-      recipient_id: recipId || '—',
-      recipient_name: recip?.name || recipId || '—',
-      blood_group: donor?.blood_group || '—',
-      match_date: today,
-      city: donor?.city || '—'
-    });
-    toast(`Match ${matchId} recorded successfully!`, 'info');
+  const payload = {
+    match_id:       matchId,
+    donor_id:       donorId,
+    donor_name:     donorName,
+    recipient_id:   recipId||'—',
+    recipient_name: recip?.name||recipId||'—',
+    blood_group:    donor?.blood_group||'—',
+    match_date:     today,
+    city:           donor?.city||'—'
+  };
+
+  try{
+    const res=await fetch('/create_match',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const d=await res.json();
+    toast(d.message||'Match recorded!','info');
+  }catch{
+    DB.matches.push(payload);
+    toast(`Match ${matchId} recorded successfully!`,'info');
   }
-  updateHeroStats();
-  // Refresh all matches if visible
-  if (document.getElementById('all-matches-section').style.display !== 'none') {
-    loadAllMatches();
-  }
+  updateStats();
+  if($('all-matches-section').style.display!=='none') loadAllMatches();
 }
 
-/* ══════════════════════════════════════
+/* ══════════════════════════════════════════════
    MATCHES — LOAD ALL
-══════════════════════════════════════ */
-async function loadAllMatches() {
-  document.getElementById('all-matches-section').style.display = 'block';
-  showShimmer('all_match_table', 9);
-  await delay(400);
-  try {
-    const res = await fetch('/all_matches');
-    const data = await res.json();
-    renderAllMatches(data.matches || []);
-  } catch { renderAllMatches(demo.matches); }
+══════════════════════════════════════════════ */
+async function loadAllMatches(){
+  $('all-matches-section').style.display='block';
+  shimmer('amt',9);
+  await delay(350);
+  try{
+    const res=await fetch('/all_matches');
+    const d=await res.json();
+    if(d.matches) DB.matches=d.matches;
+  }catch{}
+  renderAllMatches();
 }
 
-function renderAllMatches(list) {
-  const el = document.getElementById('all_match_table');
-  document.getElementById('all-match-count').textContent = `${list.length} record${list.length !== 1 ? 's' : ''}`;
-  if (!list.length) {
-    el.innerHTML = '<tr><td colspan="9"><div class="empty-state"><div class="es-icon">🔗</div><p>No matches recorded yet</p></div></td></tr>';
-    return;
-  }
-  el.innerHTML = list.map(m => `
+function renderAllMatches(){
+  const el=$('amt');
+  const list=DB.matches;
+  setText('rc-m',`${list.length} record${list.length!==1?'s':''}`);
+  if(!list.length){el.innerHTML='<tr class="er"><td colspan="9">No matches recorded yet</td></tr>';return;}
+  el.innerHTML=list.map(m=>`
     <tr>
       <td>${chip(m.match_id)}</td>
       <td>${chip(m.donor_id)}</td>
-      <td class="td-name">${m.donor_name}</td>
+      <td class="tdn">${m.donor_name||'—'}</td>
       <td>${chip(m.recipient_id)}</td>
-      <td class="td-name">${m.recipient_name}</td>
+      <td class="tdn">${m.recipient_name||'—'}</td>
       <td>${blood(m.blood_group)}</td>
-      <td>${m.match_date || '—'}</td>
-      <td>${m.city}</td>
-      <td><button class="btn-danger" onclick="askDeleteMatch('${m.match_id}')">🗑 Delete</button></td>
+      <td>${m.match_date||'—'}</td>
+      <td>${m.city||'—'}</td>
+      <td><button class="bd" onclick="askDel('match','${esc(m.match_id)}','${esc(m.match_id)}')">🗑 Delete</button></td>
     </tr>`).join('');
-  updateHeroStats();
+  updateStats();
 }
 
-function askDeleteMatch(id) {
-  openModal('⚠️ Delete Match', `Remove match record "${id}" permanently?`,
-    '🗑 Delete', 'var(--crimson)', () => deleteMatch(id));
-}
-async function deleteMatch(id) {
-  try {
-    const res = await fetch(`/delete_match/${id}`, { method:'DELETE' });
-    const d = await res.json();
-    toast(d.message || 'Match deleted.');
-  } catch {
-    demo.matches = demo.matches.filter(m => m.match_id !== id);
-    toast(`Match ${id} removed.`);
-  }
-  loadAllMatches();
-}
+/* ── utils ── */
+function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
 
-/* ── Util ── */
-function esc(s) { return s.replace(/'/g, "\\'"); }
-
-/* ── Init ── */
-updateHeroStats();
+/* ── init ── */
+updateStats();
 loadDonors();
 </script>
 </body>

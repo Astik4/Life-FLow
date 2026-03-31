@@ -7,1272 +7,735 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
   :root {
-    --crimson: #C1121F;
-    --crimson-deep: #780000;
-    --crimson-light: #E63946;
-    --cream: #FDF8F0;
-    --warm-white: #FFFCF7;
-    --charcoal: #1A1A2E;
-    --gray-soft: #6B6B7B;
-    --gray-light: #F0EDE8;
-    --gold: #D4A843;
-    --success: #2D6A4F;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--cream);
-    color: var(--charcoal);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* ─── HERO HEADER ─── */
-  .hero {
-    background: var(--charcoal);
-    position: relative;
-    overflow: hidden;
-    padding: 60px 60px 80px;
-  }
-
-  .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at 70% 50%, rgba(193,18,31,0.35) 0%, transparent 65%),
-                radial-gradient(ellipse at 10% 80%, rgba(120,0,0,0.25) 0%, transparent 50%);
-  }
-
-  .hero-grid {
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(193,18,31,0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(193,18,31,0.06) 1px, transparent 1px);
-    background-size: 50px 50px;
-  }
-
-  .hero-content {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 40px;
-  }
-
-  .hero-text .eyebrow {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--crimson-light);
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .hero-text .eyebrow::before {
-    content: '';
-    display: block;
-    width: 30px;
-    height: 1px;
-    background: var(--crimson-light);
-  }
-
-  .hero-text h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(60px, 8vw, 110px);
-    line-height: 0.9;
-    color: #fff;
-    letter-spacing: 0.02em;
-  }
-
-  .hero-text h1 span {
-    color: var(--crimson-light);
-    display: block;
-  }
-
-  .hero-text p {
-    margin-top: 24px;
-    font-size: 15px;
-    color: rgba(255,255,255,0.55);
-    max-width: 380px;
-    line-height: 1.7;
-    font-weight: 300;
-  }
-
-  .hero-stats {
-    display: flex;
-    gap: 40px;
-    flex-shrink: 0;
-  }
-
-  .stat-pill {
-    text-align: center;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px;
-    padding: 28px 32px;
-    backdrop-filter: blur(10px);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .stat-pill::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--crimson-light), transparent);
-  }
-
-  .stat-pill .num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 48px;
-    color: #fff;
-    line-height: 1;
-  }
-
-  .stat-pill .label {
-    font-size: 11px;
-    color: rgba(255,255,255,0.4);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-top: 6px;
-  }
-
-  /* ─── NAV TABS ─── */
-  .nav-bar {
-    background: var(--warm-white);
-    border-bottom: 1px solid var(--gray-light);
-    padding: 0 60px;
-    display: flex;
-    gap: 0;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
-  }
-
-  .nav-tab {
-    padding: 18px 28px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--gray-soft);
-    cursor: pointer;
-    border-bottom: 3px solid transparent;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    letter-spacing: 0.01em;
-    white-space: nowrap;
-    position: relative;
-  }
-
-  .nav-tab .tab-icon {
-    font-size: 16px;
-    transition: transform 0.2s;
-  }
-
-  .nav-tab:hover {
-    color: var(--crimson);
-  }
-
-  .nav-tab:hover .tab-icon {
-    transform: scale(1.2);
-  }
-
-  .nav-tab.active {
-    color: var(--crimson);
-    border-bottom-color: var(--crimson);
-    font-weight: 600;
-  }
-
-  /* ─── MAIN CONTENT ─── */
-  .main {
-    padding: 50px 60px;
-    max-width: 1300px;
-    margin: 0 auto;
-  }
-
-  .panel {
-    display: none;
-    animation: fadeUp 0.35s ease both;
-  }
-
-  .panel.active {
-    display: block;
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .panel-header {
-    margin-bottom: 36px;
-  }
-
-  .panel-header h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 38px;
-    color: var(--charcoal);
-    line-height: 1.1;
-  }
-
-  .panel-header h2 em {
-    color: var(--crimson);
-    font-style: italic;
-  }
-
-  .panel-header p {
-    margin-top: 10px;
-    color: var(--gray-soft);
-    font-size: 14px;
-    font-weight: 300;
-  }
-
-  /* ─── FORM CARD ─── */
-  .form-card {
-    background: var(--warm-white);
-    border-radius: 20px;
-    padding: 44px;
-    border: 1px solid rgba(0,0,0,0.06);
-    box-shadow: 0 4px 40px rgba(0,0,0,0.05);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .form-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--crimson-deep), var(--crimson-light));
-  }
-
-  .form-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 20px;
-    margin-bottom: 28px;
-  }
-
-  .field {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-  }
-
-  .field label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--gray-soft);
-  }
-
-  .field input, .field select {
-    padding: 12px 16px;
-    border: 1.5px solid var(--gray-light);
-    border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    color: var(--charcoal);
-    background: #fff;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    outline: none;
-    width: 100%;
-  }
-
-  .field input:focus, .field select:focus {
-    border-color: var(--crimson-light);
-    box-shadow: 0 0 0 3px rgba(193,18,31,0.08);
-  }
-
-  .field input::placeholder {
-    color: #C0BBBA;
-  }
-
-  /* Blood group pills in select */
-  .field select option { background: #fff; }
-
-  /* ─── BUTTONS ─── */
-  .btn-primary {
-    padding: 14px 36px;
-    background: var(--crimson);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    letter-spacing: 0.03em;
-    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-    box-shadow: 0 4px 16px rgba(193,18,31,0.25);
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .btn-primary:hover {
-    background: var(--crimson-deep);
-    transform: translateY(-1px);
-    box-shadow: 0 6px 24px rgba(193,18,31,0.35);
-  }
-
-  .btn-primary:active {
-    transform: translateY(0);
-  }
-
-  .btn-secondary {
-    padding: 14px 36px;
-    background: transparent;
-    color: var(--crimson);
-    border: 1.5px solid var(--crimson);
-    border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .btn-secondary:hover {
-    background: rgba(193,18,31,0.06);
-  }
-
-  /* ─── BLOOD GROUP BADGES ─── */
-  .blood-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    background: var(--crimson);
-    color: #fff;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 15px;
-    letter-spacing: 0.05em;
-    flex-shrink: 0;
-  }
-
-  /* ─── SEARCH PANEL ─── */
-  .search-wrap {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 32px;
-    align-items: flex-end;
-  }
-
-  .search-wrap .field {
-    flex: 1;
-  }
-
-  .search-field-inner {
-    position: relative;
-  }
-
-  .search-field-inner input {
-    padding-left: 44px;
-  }
-
-  .search-field-inner .search-icon {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--gray-soft);
-    font-size: 16px;
-  }
-
-  /* ─── RESULT CARD ─── */
-  .result-card {
-    background: var(--warm-white);
-    border-radius: 20px;
-    border: 1px solid rgba(0,0,0,0.06);
-    box-shadow: 0 4px 40px rgba(0,0,0,0.05);
-    overflow: hidden;
-    display: none;
-  }
-
-  .result-card.visible { display: block; }
-
-  .result-header {
-    background: linear-gradient(135deg, var(--charcoal), #2D2D44);
-    padding: 28px 36px;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-
-  .result-header .avatar {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background: var(--crimson);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 26px;
-    color: #fff;
-    flex-shrink: 0;
-    border: 3px solid rgba(255,255,255,0.15);
-  }
-
-  .result-header .info h3 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 24px;
-    color: #fff;
-  }
-
-  .result-header .info p {
-    font-size: 13px;
-    color: rgba(255,255,255,0.5);
-    margin-top: 4px;
-  }
-
-  .result-fields {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 1px;
-    background: var(--gray-light);
-  }
-
-  .result-field {
-    background: var(--warm-white);
-    padding: 20px 24px;
-  }
-
-  .result-field .rf-label {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--gray-soft);
-    margin-bottom: 6px;
-  }
-
-  .result-field .rf-value {
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--charcoal);
-  }
-
-  /* ─── TOAST ─── */
-  .toast-container {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .toast {
-    padding: 16px 24px;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 500;
-    color: #fff;
-    min-width: 280px;
-    animation: slideIn 0.3s ease, fadeOut 0.4s ease 2.6s forwards;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-  }
-
-  .toast.success { background: var(--success); }
-  .toast.error   { background: var(--crimson);  }
-  .toast.info    { background: var(--charcoal); }
-
-  .toast-icon { font-size: 20px; }
-
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateX(40px); }
-    to   { opacity: 1; transform: translateX(0); }
-  }
-
-  @keyframes fadeOut {
-    to { opacity: 0; transform: translateX(40px); }
-  }
-
-  /* ─── REQUESTS TABLE ─── */
-  .table-wrap {
-    overflow-x: auto;
-    border-radius: 16px;
-    border: 1px solid rgba(0,0,0,0.06);
-    box-shadow: 0 4px 30px rgba(0,0,0,0.05);
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    background: var(--warm-white);
-    font-size: 14px;
-  }
-
-  thead {
-    background: var(--charcoal);
-  }
-
-  thead th {
-    padding: 16px 20px;
-    text-align: left;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.6);
-  }
-
-  tbody tr {
-    border-bottom: 1px solid var(--gray-light);
-    transition: background 0.15s;
-  }
-
-  tbody tr:last-child { border-bottom: none; }
-  tbody tr:hover { background: rgba(193,18,31,0.03); }
-
-  tbody td {
-    padding: 16px 20px;
-    color: var(--charcoal);
-  }
-
-  .status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-  }
-
-  .status-badge.pending  { background: #FFF3CD; color: #856404; }
-  .status-badge.matched  { background: #D1E7DD; color: #0A3622; }
-  .status-badge.urgent   { background: #F8D7DA; color: #58151C; }
-
-  .status-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: currentColor;
-  }
-
-  /* ─── QUICK STATS ROW ─── */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    margin-bottom: 40px;
-  }
-
-  .stat-card {
-    background: var(--warm-white);
-    border-radius: 16px;
-    padding: 28px 24px;
-    border: 1px solid rgba(0,0,0,0.06);
-    box-shadow: 0 2px 20px rgba(0,0,0,0.04);
-    display: flex;
-    gap: 16px;
-    align-items: center;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-
-  .stat-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-  }
-
-  .stat-card .icon-wrap {
-    width: 52px; height: 52px;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    flex-shrink: 0;
-  }
-
-  .stat-card:nth-child(1) .icon-wrap { background: rgba(193,18,31,0.1); }
-  .stat-card:nth-child(2) .icon-wrap { background: rgba(45,106,79,0.1); }
-  .stat-card:nth-child(3) .icon-wrap { background: rgba(212,168,67,0.1); }
-  .stat-card:nth-child(4) .icon-wrap { background: rgba(26,26,46,0.08); }
-
-  .stat-card .sc-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 36px;
-    line-height: 1;
-    color: var(--charcoal);
-  }
-
-  .stat-card .sc-label {
-    font-size: 12px;
-    color: var(--gray-soft);
-    margin-top: 4px;
-  }
-
-  /* ─── SECTION DIVIDER ─── */
-  .section-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-    align-items: start;
-  }
-
-  /* ─── BLOOD TYPE GRID ─── */
-  .blood-types-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-top: 16px;
-  }
-
-  .bt-card {
-    background: var(--warm-white);
-    border-radius: 14px;
-    padding: 20px 12px;
-    text-align: center;
-    border: 1.5px solid var(--gray-light);
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .bt-card:hover, .bt-card.selected {
-    border-color: var(--crimson);
-    background: rgba(193,18,31,0.04);
-  }
-
-  .bt-card .bt-symbol {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
-    color: var(--crimson);
-  }
-
-  .bt-card .bt-count {
-    font-size: 11px;
-    color: var(--gray-soft);
-    margin-top: 4px;
-  }
-
-  /* Decorative drop */
-  .drop-deco {
-    position: absolute;
-    right: 40px;
-    bottom: -20px;
-    opacity: 0.07;
-    font-size: 140px;
-    line-height: 1;
-    pointer-events: none;
-    user-select: none;
-    color: var(--crimson);
-  }
-
-  @media (max-width: 900px) {
-    .hero { padding: 40px 24px 60px; }
-    .hero-content { flex-direction: column; }
-    .hero-stats { gap: 16px; }
-    .main { padding: 30px 20px; }
-    .nav-bar { padding: 0 20px; overflow-x: auto; }
-    .stats-row { grid-template-columns: 1fr 1fr; }
-    .section-row { grid-template-columns: 1fr; }
-    .form-card { padding: 28px 20px; }
+    --crimson:#C1121F; --crimson-deep:#780000; --crimson-light:#E63946;
+    --cream:#FDF8F0; --warm-white:#FFFCF7; --charcoal:#1A1A2E;
+    --gray-soft:#6B6B7B; --gray-light:#F0EDE8; --success:#2D6A4F;
+    --indigo:#4F46E5;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--charcoal);min-height:100vh;overflow-x:hidden;}
+
+  /* HERO */
+  .hero{background:var(--charcoal);position:relative;overflow:hidden;padding:60px 60px 80px;}
+  .hero::before{content:'';position:absolute;inset:0;
+    background:radial-gradient(ellipse at 70% 50%,rgba(193,18,31,.35) 0%,transparent 65%),
+               radial-gradient(ellipse at 10% 80%,rgba(120,0,0,.25) 0%,transparent 50%);}
+  .hero-grid{position:absolute;inset:0;
+    background-image:linear-gradient(rgba(193,18,31,.06) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(193,18,31,.06) 1px,transparent 1px);
+    background-size:50px 50px;}
+  .hero-inner{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap;}
+  .hero-text .eyebrow{font-size:11px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--crimson-light);
+    margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+  .hero-text .eyebrow::before{content:'';display:block;width:30px;height:1px;background:var(--crimson-light);}
+  .hero-text h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,8vw,110px);line-height:.9;color:#fff;letter-spacing:.02em;}
+  .hero-text h1 span{color:var(--crimson-light);display:block;}
+  .hero-text p{margin-top:24px;font-size:15px;color:rgba(255,255,255,.55);max-width:380px;line-height:1.7;font-weight:300;}
+  .hero-stats{display:flex;gap:16px;flex-shrink:0;flex-wrap:wrap;}
+  .stat-pill{text-align:center;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+    border-radius:16px;padding:24px 28px;backdrop-filter:blur(10px);position:relative;overflow:hidden;min-width:90px;}
+  .stat-pill::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,transparent,var(--crimson-light),transparent);}
+  .stat-pill .num{font-family:'Bebas Neue',sans-serif;font-size:44px;color:#fff;line-height:1;}
+  .stat-pill .label{font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.15em;text-transform:uppercase;margin-top:6px;}
+
+  /* NAV */
+  .nav-bar{background:var(--warm-white);border-bottom:1px solid var(--gray-light);padding:0 60px;
+    display:flex;position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,.06);overflow-x:auto;}
+  .nav-tab{padding:18px 26px;font-size:13px;font-weight:500;color:var(--gray-soft);cursor:pointer;
+    border-bottom:3px solid transparent;transition:all .2s;display:flex;align-items:center;gap:8px;white-space:nowrap;}
+  .nav-tab .ti{font-size:16px;transition:transform .2s;}
+  .nav-tab:hover{color:var(--crimson);}
+  .nav-tab:hover .ti{transform:scale(1.2);}
+  .nav-tab.active{color:var(--crimson);border-bottom-color:var(--crimson);font-weight:600;}
+
+  /* MAIN */
+  .main{padding:50px 60px;max-width:1300px;margin:0 auto;}
+  .panel{display:none;animation:fadeUp .35s ease both;}
+  .panel.active{display:block;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+  /* PANEL HEADER */
+  .ph{margin-bottom:32px;}
+  .ph h2{font-family:'DM Serif Display',serif;font-size:38px;color:var(--charcoal);line-height:1.1;}
+  .ph h2 em{color:var(--crimson);font-style:italic;}
+  .ph p{margin-top:10px;color:var(--gray-soft);font-size:14px;font-weight:300;}
+
+  /* FORM CARD */
+  .form-card{background:var(--warm-white);border-radius:20px;padding:40px;border:1px solid rgba(0,0,0,.06);
+    box-shadow:0 4px 40px rgba(0,0,0,.05);position:relative;overflow:hidden;}
+  .form-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;
+    background:linear-gradient(90deg,var(--crimson-deep),var(--crimson-light));}
+  .form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px;margin-bottom:24px;}
+  .field{display:flex;flex-direction:column;gap:7px;}
+  .field label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-soft);}
+  .field input,.field select{padding:12px 14px;border:1.5px solid var(--gray-light);border-radius:10px;
+    font-family:'DM Sans',sans-serif;font-size:14px;color:var(--charcoal);background:#fff;outline:none;
+    transition:border-color .2s,box-shadow .2s;width:100%;}
+  .field input:focus,.field select:focus{border-color:var(--crimson-light);box-shadow:0 0 0 3px rgba(193,18,31,.08);}
+  .field input::placeholder{color:#C0BBBA;}
+
+  .btn-primary{padding:13px 32px;background:var(--crimson);color:#fff;border:none;border-radius:10px;
+    font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;
+    transition:background .2s,transform .15s,box-shadow .2s;box-shadow:0 4px 16px rgba(193,18,31,.25);
+    display:inline-flex;align-items:center;gap:8px;}
+  .btn-primary:hover{background:var(--crimson-deep);transform:translateY(-1px);box-shadow:0 6px 24px rgba(193,18,31,.35);}
+  .btn-secondary{padding:13px 32px;background:transparent;color:var(--crimson);border:1.5px solid var(--crimson);
+    border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;
+    transition:all .2s;display:inline-flex;align-items:center;gap:8px;}
+  .btn-secondary:hover{background:rgba(193,18,31,.06);}
+
+  /* DASHBOARD */
+  .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:36px;}
+  .stat-card{background:var(--warm-white);border-radius:16px;padding:26px 22px;border:1px solid rgba(0,0,0,.06);
+    box-shadow:0 2px 20px rgba(0,0,0,.04);display:flex;gap:14px;align-items:center;
+    transition:transform .2s,box-shadow .2s;}
+  .stat-card:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,.1);}
+  .stat-card .iw{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+  .stat-card:nth-child(1) .iw{background:rgba(193,18,31,.1);}
+  .stat-card:nth-child(2) .iw{background:rgba(45,106,79,.1);}
+  .stat-card:nth-child(3) .iw{background:rgba(212,168,67,.1);}
+  .stat-card:nth-child(4) .iw{background:rgba(79,70,229,.1);}
+  .stat-card .sc-num{font-family:'Bebas Neue',sans-serif;font-size:34px;line-height:1;color:var(--charcoal);}
+  .stat-card .sc-label{font-size:12px;color:var(--gray-soft);margin-top:3px;}
+
+  .section-row{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start;}
+
+  /* BLOOD TYPE GRID */
+  .bt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px;}
+  .bt-card{background:var(--warm-white);border-radius:12px;padding:16px 10px;text-align:center;
+    border:1.5px solid var(--gray-light);cursor:default;transition:all .2s;}
+  .bt-card.has-donors{border-color:var(--crimson);background:rgba(193,18,31,.04);}
+  .bt-card .bt-sym{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--crimson);}
+  .bt-card .bt-cnt{font-size:11px;color:var(--gray-soft);margin-top:3px;}
+
+  /* TABLE */
+  .table-wrap{overflow-x:auto;border-radius:16px;border:1px solid rgba(0,0,0,.06);box-shadow:0 4px 30px rgba(0,0,0,.05);}
+  table{width:100%;border-collapse:collapse;background:var(--warm-white);font-size:13.5px;}
+  thead{background:var(--charcoal);}
+  thead th{padding:14px 16px;text-align:left;font-size:10.5px;font-weight:600;letter-spacing:.12em;
+    text-transform:uppercase;color:rgba(255,255,255,.55);white-space:nowrap;}
+  tbody tr{border-bottom:1px solid var(--gray-light);transition:background .15s;}
+  tbody tr:last-child{border-bottom:none;}
+  tbody tr:hover{background:rgba(193,18,31,.025);}
+  tbody td{padding:13px 16px;color:var(--charcoal);white-space:nowrap;}
+  .td-name{font-weight:600;}
+
+  .blood-badge{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:26px;
+    border-radius:6px;background:var(--crimson);color:#fff;font-family:'Bebas Neue',sans-serif;
+    font-size:13px;padding:0 7px;}
+  .status-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;
+    font-size:11.5px;font-weight:600;white-space:nowrap;}
+  .sdot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+  .status-badge.pending{background:#FFF3CD;color:#856404;}
+  .status-badge.matched{background:#D1E7DD;color:#0A3622;}
+  .status-badge.urgent{background:#F8D7DA;color:#58151C;}
+
+  /* SEARCH */
+  .search-row{display:flex;gap:14px;align-items:flex-end;margin-bottom:28px;}
+  .search-row .field{flex:1;}
+  .search-icon-wrap{position:relative;}
+  .search-icon-wrap input{padding-left:42px;}
+  .search-icon-wrap .si{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--gray-soft);font-size:16px;}
+
+  /* RESULT CARD */
+  .result-card{background:var(--warm-white);border-radius:20px;border:1px solid rgba(0,0,0,.06);
+    box-shadow:0 4px 40px rgba(0,0,0,.05);overflow:hidden;display:none;}
+  .result-card.visible{display:block;}
+  .result-header{background:linear-gradient(135deg,var(--charcoal),#2D2D44);padding:26px 32px;
+    display:flex;align-items:center;gap:18px;}
+  .result-header .avatar{width:60px;height:60px;border-radius:50%;background:var(--crimson);
+    display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;
+    font-size:24px;color:#fff;flex-shrink:0;border:3px solid rgba(255,255,255,.15);}
+  .result-header .info h3{font-family:'DM Serif Display',serif;font-size:22px;color:#fff;}
+  .result-header .info p{font-size:13px;color:rgba(255,255,255,.5);margin-top:4px;}
+  .result-fields{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:1px;background:var(--gray-light);}
+  .rf{background:var(--warm-white);padding:18px 22px;}
+  .rf .rfl{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gray-soft);margin-bottom:5px;}
+  .rf .rfv{font-size:15px;font-weight:500;color:var(--charcoal);}
+
+  /* RECENT ACTIVITY */
+  .activity-list{display:flex;flex-direction:column;gap:0;}
+  .activity-item{background:var(--warm-white);padding:14px 18px;display:flex;align-items:center;gap:14px;
+    border-bottom:1px solid var(--gray-light);transition:background .15s;}
+  .activity-item:last-child{border-bottom:none;}
+  .activity-item:first-child{border-radius:16px 16px 0 0;}
+  .activity-item:last-child{border-radius:0 0 16px 16px;}
+  .activity-item:only-child{border-radius:16px;}
+  .activity-item:hover{background:rgba(193,18,31,.025);}
+  .a-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .a-icon.donor{background:rgba(193,18,31,.1);}
+  .a-icon.recipient{background:rgba(45,106,79,.1);}
+  .a-icon.request{background:rgba(212,168,67,.1);}
+  .a-text .a-title{font-size:13.5px;font-weight:600;color:var(--charcoal);}
+  .a-text .a-sub{font-size:12px;color:var(--gray-soft);margin-top:2px;}
+  .a-time{margin-left:auto;font-size:11px;color:var(--gray-soft);}
+
+  /* TOAST */
+  .toast-container{position:fixed;bottom:30px;right:30px;z-index:9999;display:flex;flex-direction:column;gap:12px;}
+  .toast{padding:15px 22px;border-radius:12px;font-size:14px;font-weight:500;color:#fff;min-width:270px;
+    animation:slideIn .3s ease,fadeOut .4s ease 2.6s forwards;display:flex;align-items:center;gap:10px;
+    box-shadow:0 8px 32px rgba(0,0,0,.2);}
+  .toast.success{background:var(--success);}
+  .toast.error{background:var(--crimson);}
+  .toast.info{background:var(--charcoal);}
+  @keyframes slideIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+  @keyframes fadeOut{to{opacity:0;transform:translateX(40px)}}
+
+  code{font-size:12px;background:var(--gray-light);padding:2px 7px;border-radius:5px;font-family:monospace;}
+  .empty-row td{text-align:center;padding:40px 20px!important;color:var(--gray-soft);font-size:14px;font-weight:300;}
+
+  @media(max-width:900px){
+    .hero{padding:40px 20px 60px;}
+    .main{padding:28px 16px;}
+    .nav-bar{padding:0 16px;}
+    .stats-row{grid-template-columns:1fr 1fr;}
+    .section-row{grid-template-columns:1fr;}
   }
 </style>
 </head>
 <body>
 
-<!-- HERO -->
 <header class="hero">
   <div class="hero-grid"></div>
-  <div class="hero-content">
+  <div class="hero-inner">
     <div class="hero-text">
       <div class="eyebrow">Life-saving platform</div>
       <h1>LIFE<span>FLOW</span></h1>
-      <p>Connecting donors and recipients. Every drop counts — register, search, and save a life today.</p>
+      <p>Register donors and recipients, search donors, and manage blood requests — all in real time.</p>
     </div>
     <div class="hero-stats">
-      <div class="stat-pill">
-        <div class="num" id="stat-donors">0</div>
-        <div class="label">Donors</div>
-      </div>
-      <div class="stat-pill">
-        <div class="num" id="stat-requests">0</div>
-        <div class="label">Requests</div>
-      </div>
-      <div class="stat-pill">
-        <div class="num" id="stat-recipients">0</div>
-        <div class="label">Recipients</div>
-      </div>
+      <div class="stat-pill"><div class="num" id="hs-donors">0</div><div class="label">Donors</div></div>
+      <div class="stat-pill"><div class="num" id="hs-recipients">0</div><div class="label">Recipients</div></div>
+      <div class="stat-pill"><div class="num" id="hs-requests">0</div><div class="label">Requests</div></div>
     </div>
   </div>
 </header>
 
-<!-- NAV -->
 <nav class="nav-bar">
-  <div class="nav-tab active" onclick="switchTab('dashboard', this)">
-    <span class="tab-icon">📊</span> Dashboard
-  </div>
-  <div class="nav-tab" onclick="switchTab('donor', this)">
-    <span class="tab-icon">🩸</span> Add Donor
-  </div>
-  <div class="nav-tab" onclick="switchTab('recipient', this)">
-    <span class="tab-icon">🏥</span> Add Recipient
-  </div>
-  <div class="nav-tab" onclick="switchTab('search', this)">
-    <span class="tab-icon">🔍</span> Search Donor
-  </div>
-  <div class="nav-tab" onclick="switchTab('request', this)">
-    <span class="tab-icon">📋</span> Blood Requests
-  </div>
+  <div class="nav-tab active" onclick="switchTab('dashboard',this)"><span class="ti">📊</span>Dashboard</div>
+  <div class="nav-tab" onclick="switchTab('donor',this)"><span class="ti">🩸</span>Add Donor</div>
+  <div class="nav-tab" onclick="switchTab('recipient',this)"><span class="ti">🏥</span>Add Recipient</div>
+  <div class="nav-tab" onclick="switchTab('search',this)"><span class="ti">🔍</span>Search Donor</div>
+  <div class="nav-tab" onclick="switchTab('request',this)"><span class="ti">📋</span>Blood Requests</div>
 </nav>
 
-<!-- MAIN -->
 <main class="main">
 
-  <!-- DASHBOARD -->
+  <!-- ═══ DASHBOARD ═══ -->
   <div class="panel active" id="panel-dashboard">
-    <div class="panel-header">
-      <h2>Welcome to <em>LifeFlow</em></h2>
-      <p>Your blood donation management hub — live overview of all activity.</p>
-    </div>
+    <div class="ph"><h2>System <em>Overview</em></h2><p>Live snapshot — updates instantly as data changes.</p></div>
 
     <div class="stats-row">
-      <div class="stat-card">
-        <div class="icon-wrap">🩸</div>
-        <div>
-          <div class="sc-num" id="dash-donors">0</div>
-          <div class="sc-label">Total Donors</div>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="icon-wrap">💚</div>
-        <div>
-          <div class="sc-num" id="dash-recipients">0</div>
-          <div class="sc-label">Recipients Registered</div>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="icon-wrap">📋</div>
-        <div>
-          <div class="sc-num" id="dash-requests">0</div>
-          <div class="sc-label">Blood Requests</div>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="icon-wrap">✅</div>
-        <div>
-          <div class="sc-num" id="dash-matched">0</div>
-          <div class="sc-label">Matched</div>
-        </div>
-      </div>
+      <div class="stat-card"><div class="iw">🩸</div><div><div class="sc-num" id="d-donors">0</div><div class="sc-label">Total Donors</div></div></div>
+      <div class="stat-card"><div class="iw">💚</div><div><div class="sc-num" id="d-recip">0</div><div class="sc-label">Recipients</div></div></div>
+      <div class="stat-card"><div class="iw">📋</div><div><div class="sc-num" id="d-reqs">0</div><div class="sc-label">Requests</div></div></div>
+      <div class="stat-card"><div class="iw">✅</div><div><div class="sc-num" id="d-matched">0</div><div class="sc-label">Matched</div></div></div>
     </div>
 
     <div class="section-row">
       <div>
-        <div class="panel-header" style="margin-bottom:16px">
-          <h2 style="font-size:24px;">Blood Type <em>Availability</em></h2>
-          <p>Available donors by blood group</p>
-        </div>
-        <div class="blood-types-grid" id="blood-type-grid">
-          <!-- filled by JS -->
-        </div>
+        <div class="ph" style="margin-bottom:14px"><h2 style="font-size:24px">Blood Type <em>Availability</em></h2><p>Live donor count per group</p></div>
+        <div class="bt-grid" id="bt-grid"></div>
       </div>
-
       <div>
-        <div class="panel-header" style="margin-bottom:16px">
-          <h2 style="font-size:24px;">Recent <em>Requests</em></h2>
-          <p>Latest blood requests in the system</p>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Recipient</th>
-                <th>Group</th>
-                <th>City</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="recent-requests-body">
-              <tr><td colspan="4" style="text-align:center;padding:30px;color:var(--gray-soft);">No requests yet</td></tr>
-            </tbody>
-          </table>
-        </div>
+        <div class="ph" style="margin-bottom:14px"><h2 style="font-size:24px">Recent <em>Activity</em></h2><p>Latest additions across all categories</p></div>
+        <div class="activity-list" id="activity-list"><div style="padding:30px;text-align:center;color:var(--gray-soft);font-size:14px">No activity yet</div></div>
       </div>
     </div>
   </div>
 
-  <!-- ADD DONOR -->
+  <!-- ═══ ADD DONOR ═══ -->
   <div class="panel" id="panel-donor">
-    <div class="panel-header">
-      <h2>Register a <em>Donor</em></h2>
-      <p>Fill in the details below to add a new blood donor to the system.</p>
-    </div>
+    <div class="ph"><h2>Register a <em>Donor</em></h2><p>Fill in the details to add a new blood donor.</p></div>
     <div class="form-card">
-      <span class="drop-deco">🩸</span>
       <div class="form-grid">
-        <div class="field">
-          <label>Donor ID</label>
-          <input id="d_id" placeholder="e.g. DNR-001">
-        </div>
-        <div class="field">
-          <label>Full Name</label>
-          <input id="d_name" placeholder="e.g. Arjun Sharma">
-        </div>
-        <div class="field">
-          <label>Blood Group</label>
-          <select id="d_group">
-            <option value="">Select group</option>
-            <option>A+</option><option>A-</option>
-            <option>B+</option><option>B-</option>
-            <option>AB+</option><option>AB-</option>
-            <option>O+</option><option>O-</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Age</label>
-          <input id="d_age" type="number" placeholder="e.g. 28" min="18" max="65">
-        </div>
-        <div class="field">
-          <label>Gender</label>
-          <select id="d_gender">
-            <option value="">Select</option>
-            <option>Male</option>
-            <option>Female</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Phone</label>
-          <input id="d_phone" placeholder="e.g. +91 9876543210">
-        </div>
-        <div class="field">
-          <label>City</label>
-          <input id="d_city" placeholder="e.g. Faridabad">
-        </div>
-        <div class="field">
-          <label>Last Donation Date</label>
-          <input id="d_date" type="date">
-        </div>
+        <div class="field"><label>Donor ID</label><input id="d_id" placeholder="e.g. DNR-001"></div>
+        <div class="field"><label>Full Name</label><input id="d_name" placeholder="e.g. Arjun Sharma"></div>
+        <div class="field"><label>Blood Group</label>
+          <select id="d_group"><option value="">Select group</option>
+            <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+            <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></div>
+        <div class="field"><label>Age</label><input id="d_age" type="number" placeholder="18–65" min="18" max="65"></div>
+        <div class="field"><label>Gender</label>
+          <select id="d_gender"><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select></div>
+        <div class="field"><label>Phone</label><input id="d_phone" placeholder="+91 98765 43210"></div>
+        <div class="field"><label>City</label><input id="d_city" placeholder="e.g. Delhi"></div>
+        <div class="field"><label>Last Donation Date</label><input id="d_date" type="date"></div>
       </div>
       <button class="btn-primary" onclick="addDonor()">🩸 Register Donor</button>
     </div>
+
+    <!-- Live donors table -->
+    <div style="margin-top:36px">
+      <div class="ph" style="margin-bottom:14px"><h2 style="font-size:24px">All <em>Donors</em></h2><p id="donor-table-count">0 registered</p></div>
+      <div class="table-wrap">
+        <table><thead><tr><th>ID</th><th>Name</th><th>Group</th><th>Age</th><th>Gender</th><th>Phone</th><th>City</th><th>Last Donation</th></tr></thead>
+        <tbody id="donors-table-body"><tr class="empty-row"><td colspan="8">No donors yet — add one above</td></tr></tbody></table>
+      </div>
+    </div>
   </div>
 
-  <!-- ADD RECIPIENT -->
+  <!-- ═══ ADD RECIPIENT ═══ -->
   <div class="panel" id="panel-recipient">
-    <div class="panel-header">
-      <h2>Register a <em>Recipient</em></h2>
-      <p>Enter the patient details who requires blood.</p>
-    </div>
+    <div class="ph"><h2>Register a <em>Recipient</em></h2><p>Enter patient details who requires blood.</p></div>
     <div class="form-card">
-      <span class="drop-deco">🏥</span>
       <div class="form-grid">
-        <div class="field">
-          <label>Recipient ID</label>
-          <input id="r_id" placeholder="e.g. RCP-001">
-        </div>
-        <div class="field">
-          <label>Full Name</label>
-          <input id="r_name" placeholder="e.g. Priya Singh">
-        </div>
-        <div class="field">
-          <label>Blood Group</label>
-          <select id="r_group">
-            <option value="">Select group</option>
-            <option>A+</option><option>A-</option>
-            <option>B+</option><option>B-</option>
-            <option>AB+</option><option>AB-</option>
-            <option>O+</option><option>O-</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Age</label>
-          <input id="r_age" type="number" placeholder="e.g. 35">
-        </div>
-        <div class="field">
-          <label>Gender</label>
-          <select id="r_gender">
-            <option value="">Select</option>
-            <option>Male</option>
-            <option>Female</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Phone</label>
-          <input id="r_phone" placeholder="e.g. +91 9876543210">
-        </div>
-        <div class="field">
-          <label>City</label>
-          <input id="r_city" placeholder="e.g. Delhi">
-        </div>
+        <div class="field"><label>Recipient ID</label><input id="r_id" placeholder="e.g. RCP-001"></div>
+        <div class="field"><label>Full Name</label><input id="r_name" placeholder="e.g. Priya Singh"></div>
+        <div class="field"><label>Blood Group</label>
+          <select id="r_group"><option value="">Select group</option>
+            <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+            <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></div>
+        <div class="field"><label>Age</label><input id="r_age" type="number" placeholder="e.g. 35"></div>
+        <div class="field"><label>Gender</label>
+          <select id="r_gender"><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select></div>
+        <div class="field"><label>Phone</label><input id="r_phone" placeholder="+91 98765 43210"></div>
+        <div class="field"><label>City</label><input id="r_city" placeholder="e.g. Delhi"></div>
       </div>
       <button class="btn-primary" onclick="addRecipient()">💚 Register Recipient</button>
     </div>
+
+    <!-- Live recipients table -->
+    <div style="margin-top:36px">
+      <div class="ph" style="margin-bottom:14px"><h2 style="font-size:24px">All <em>Recipients</em></h2><p id="recip-table-count">0 registered</p></div>
+      <div class="table-wrap">
+        <table><thead><tr><th>ID</th><th>Name</th><th>Group</th><th>Age</th><th>Gender</th><th>Phone</th><th>City</th></tr></thead>
+        <tbody id="recip-table-body"><tr class="empty-row"><td colspan="7">No recipients yet — add one above</td></tr></tbody></table>
+      </div>
+    </div>
   </div>
 
-  <!-- SEARCH -->
+  <!-- ═══ SEARCH ═══ -->
   <div class="panel" id="panel-search">
-    <div class="panel-header">
-      <h2>Find a <em>Donor</em></h2>
-      <p>Search by Donor ID to view complete donor information.</p>
-    </div>
-    <div class="search-wrap">
+    <div class="ph"><h2>Find a <em>Donor</em></h2><p>Search by Donor ID to view full donor details.</p></div>
+    <div class="search-row">
       <div class="field" style="flex:1">
         <label>Donor ID</label>
-        <div class="search-field-inner">
-          <span class="search-icon">🔍</span>
+        <div class="search-icon-wrap">
+          <span class="si">🔍</span>
           <input id="search_id" placeholder="Enter Donor ID (e.g. DNR-001)" onkeyup="if(event.key==='Enter')searchDonor()">
         </div>
       </div>
       <button class="btn-primary" onclick="searchDonor()">Search</button>
       <button class="btn-secondary" onclick="clearSearch()">Clear</button>
     </div>
+
+    <!-- Also allow filtering by blood group / city -->
+    <div class="form-card" style="margin-bottom:28px;padding:28px 32px">
+      <div style="font-size:13px;font-weight:600;color:var(--gray-soft);letter-spacing:.05em;text-transform:uppercase;margin-bottom:16px">Or filter all donors</div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end">
+        <div class="field" style="min-width:160px">
+          <label>Blood Group</label>
+          <select id="filter_group" onchange="filterDonors()">
+            <option value="">All Groups</option>
+            <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+            <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
+          </select>
+        </div>
+        <div class="field" style="min-width:180px">
+          <label>City</label>
+          <input id="filter_city" placeholder="Any city" oninput="filterDonors()">
+        </div>
+        <button class="btn-secondary" onclick="clearFilter()" style="white-space:nowrap">✕ Clear Filter</button>
+      </div>
+    </div>
+
     <div class="result-card" id="result-card">
       <div class="result-header">
         <div class="avatar" id="res-avatar">?</div>
-        <div class="info">
-          <h3 id="res-name">—</h3>
-          <p id="res-id-label">ID: —</p>
-        </div>
-        <div style="margin-left:auto">
-          <div class="blood-badge" id="res-blood">—</div>
-        </div>
+        <div class="info"><h3 id="res-name">—</h3><p id="res-sub">—</p></div>
+        <div style="margin-left:auto"><span class="blood-badge" id="res-blood" style="width:auto;padding:6px 14px;height:auto;font-size:20px">—</span></div>
       </div>
       <div class="result-fields" id="res-fields"></div>
     </div>
+
+    <!-- Filter results table -->
+    <div id="filter-results" style="display:none;margin-top:20px">
+      <div class="ph" style="margin-bottom:12px"><h2 style="font-size:22px">Filter <em>Results</em></h2><p id="filter-count"></p></div>
+      <div class="table-wrap">
+        <table><thead><tr><th>ID</th><th>Name</th><th>Group</th><th>Age</th><th>Phone</th><th>City</th><th>Last Donation</th></tr></thead>
+        <tbody id="filter-table-body"></tbody></table>
+      </div>
+    </div>
   </div>
 
-  <!-- REQUESTS -->
+  <!-- ═══ REQUESTS ═══ -->
   <div class="panel" id="panel-request">
-    <div class="panel-header">
-      <h2>Blood <em>Requests</em></h2>
-      <p>Create and track all blood requests in one place.</p>
+    <div class="ph"><h2>Blood <em>Requests</em></h2><p>Create and track all blood requests.</p></div>
+    <div class="form-card" style="margin-bottom:32px">
+      <div class="form-grid" style="grid-template-columns:repeat(auto-fill,minmax(190px,1fr))">
+        <div class="field"><label>Request ID</label><input id="req_id" placeholder="e.g. REQ-001"></div>
+        <div class="field"><label>Recipient ID</label><input id="req_recipient" placeholder="e.g. RCP-001"></div>
+        <div class="field"><label>Blood Group</label>
+          <select id="req_group"><option value="">Select</option>
+            <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+            <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></div>
+        <div class="field"><label>Request Date</label><input id="req_date" type="date"></div>
+        <div class="field"><label>City</label><input id="req_city" placeholder="e.g. Delhi"></div>
+        <div class="field"><label>Priority</label>
+          <select id="req_status"><option value="pending">Pending</option><option value="urgent">Urgent</option><option value="matched">Matched</option></select></div>
+      </div>
+      <button class="btn-primary" onclick="addRequest()">📋 Create Request</button>
     </div>
 
-    <div class="section-row" style="margin-bottom:40px">
-      <div class="form-card" style="padding:32px 36px">
-        <h3 style="font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:22px;color:var(--charcoal)">New Request</h3>
-        <div class="form-grid" style="grid-template-columns:1fr 1fr">
-          <div class="field">
-            <label>Request ID</label>
-            <input id="req_id" placeholder="e.g. REQ-001">
-          </div>
-          <div class="field">
-            <label>Recipient ID</label>
-            <input id="req_recipient" placeholder="e.g. RCP-001">
-          </div>
-          <div class="field">
-            <label>Blood Group</label>
-            <select id="req_group">
-              <option value="">Select</option>
-              <option>A+</option><option>A-</option>
-              <option>B+</option><option>B-</option>
-              <option>AB+</option><option>AB-</option>
-              <option>O+</option><option>O-</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Request Date</label>
-            <input id="req_date" type="date">
-          </div>
-          <div class="field">
-            <label>City</label>
-            <input id="req_city" placeholder="e.g. Gurugram">
-          </div>
-          <div class="field">
-            <label>Status</label>
-            <select id="req_status">
-              <option value="">Select status</option>
-              <option value="pending">Pending</option>
-              <option value="matched">Matched</option>
-              <option value="urgent">Urgent</option>
-            </select>
-          </div>
-        </div>
-        <button class="btn-primary" onclick="addRequest()">📋 Create Request</button>
-      </div>
-
-      <div>
-        <div class="panel-header" style="margin-bottom:16px">
-          <h2 style="font-size:22px;">All <em>Requests</em></h2>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Req ID</th>
-                <th>Recipient</th>
-                <th>Group</th>
-                <th>City</th>
-                <th>Date</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="requests-body">
-              <tr><td colspan="6" style="text-align:center;padding:30px;color:var(--gray-soft);">No requests yet</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+    <div class="ph" style="margin-bottom:14px"><h2 style="font-size:24px">All <em>Requests</em></h2><p id="req-table-count">0 requests</p></div>
+    <div class="table-wrap">
+      <table><thead><tr><th>Req ID</th><th>Recipient</th><th>Blood Group</th><th>Date</th><th>City</th><th>Status</th></tr></thead>
+      <tbody id="req-table-body"><tr class="empty-row"><td colspan="6">No requests yet</td></tr></tbody></table>
     </div>
   </div>
 
 </main>
 
-<!-- TOAST CONTAINER -->
 <div class="toast-container" id="toast-container"></div>
 
 <script>
-/* ── In-memory data store ── */
-const db = {
-  donors: [],
+/* ══════════════════════════════════════════════
+   SHARED REACTIVE STORE
+══════════════════════════════════════════════ */
+const store = {
+  donors:     [],
   recipients: [],
-  requests: []
+  requests:   [],
+  activity:   [],
+
+  addDonor(d)     { this.donors.push(d);     this._log('donor',d.donor_id,d.name,d.blood_group); this._emit(); },
+  addRecipient(r) { this.recipients.push(r); this._log('recipient',r.recipient_id,r.name,r.blood_group); this._emit(); },
+  addRequest(r)   { this.requests.push(r);   this._log('request',r.request_id,'Blood '+r.blood_group,r.city); this._emit(); },
+
+  _log(type, id, label, detail) {
+    this.activity.unshift({ type, id, label, detail, time: new Date() });
+    if (this.activity.length > 20) this.activity.pop();
+  },
+  _emit() { renderAll(); }
 };
 
-const BLOOD_GROUPS = ['A+','A-','B+','B-','AB+','AB-','O+','O-'];
-
-/* ── Tab switching ── */
-function switchTab(name, el) {
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('panel-' + name).classList.add('active');
-  if (name === 'dashboard') refreshDashboard();
+/* ══════════════════════════════════════════════
+   RENDER ALL — called after every store change
+══════════════════════════════════════════════ */
+function renderAll() {
+  renderHeroStats();
+  renderDashboard();
+  renderDonorsTable();
+  renderRecipientsTable();
+  renderRequestsTable();
 }
 
-/* ── Toast ── */
-function toast(msg, type = 'success') {
-  const icons = { success: '✅', error: '❌', info: 'ℹ️' };
-  const t = document.createElement('div');
-  t.className = `toast ${type}`;
-  t.innerHTML = `<span class="toast-icon">${icons[type]}</span> ${msg}`;
-  document.getElementById('toast-container').appendChild(t);
-  setTimeout(() => t.remove(), 3200);
+function renderHeroStats() {
+  setText('hs-donors',     store.donors.length);
+  setText('hs-recipients', store.recipients.length);
+  setText('hs-requests',   store.requests.length);
 }
 
-/* ── Counter animation ── */
-function animateCount(el, target) {
-  let v = 0;
-  const step = Math.max(1, Math.ceil(target / 30));
-  const iv = setInterval(() => {
-    v = Math.min(v + step, target);
-    el.textContent = v;
-    if (v >= target) clearInterval(iv);
-  }, 30);
-}
-
-/* ── Dashboard refresh ── */
-function refreshDashboard() {
-  animateCount(document.getElementById('dash-donors'),     db.donors.length);
-  animateCount(document.getElementById('dash-recipients'), db.recipients.length);
-  animateCount(document.getElementById('dash-requests'),   db.requests.length);
-  animateCount(document.getElementById('dash-matched'),    db.requests.filter(r=>r.status==='matched').length);
-
-  // Hero stats
-  animateCount(document.getElementById('stat-donors'),     db.donors.length);
-  animateCount(document.getElementById('stat-requests'),   db.requests.length);
-  animateCount(document.getElementById('stat-recipients'), db.recipients.length);
+function renderDashboard() {
+  setText('d-donors',  store.donors.length);
+  setText('d-recip',   store.recipients.length);
+  setText('d-reqs',    store.requests.length);
+  setText('d-matched', store.requests.filter(r => r.status === 'matched').length);
 
   // Blood type grid
-  const grid = document.getElementById('blood-type-grid');
-  grid.innerHTML = BLOOD_GROUPS.map(g => {
-    const count = db.donors.filter(d => d.blood_group === g).length;
-    return `<div class="bt-card">
-      <div class="bt-symbol">${g}</div>
-      <div class="bt-count">${count} donor${count !== 1 ? 's' : ''}</div>
+  const GROUPS = ['A+','A-','B+','B-','AB+','AB-','O+','O-'];
+  const grid = document.getElementById('bt-grid');
+  grid.innerHTML = GROUPS.map(g => {
+    const cnt = store.donors.filter(d => d.blood_group === g).length;
+    return `<div class="bt-card ${cnt > 0 ? 'has-donors' : ''}">
+      <div class="bt-sym">${g}</div>
+      <div class="bt-cnt">${cnt} donor${cnt !== 1 ? 's' : ''}</div>
     </div>`;
   }).join('');
 
-  // Recent requests
-  const tbody = document.getElementById('recent-requests-body');
-  if (!db.requests.length) {
-    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:30px;color:var(--gray-soft);">No requests yet</td></tr>';
-  } else {
-    tbody.innerHTML = db.requests.slice(-5).reverse().map(r => `
-      <tr>
-        <td>${r.recipient_id}</td>
-        <td><span class="blood-badge" style="width:36px;height:36px;font-size:12px">${r.blood_group}</span></td>
-        <td>${r.city}</td>
-        <td>${statusBadge(r.status)}</td>
-      </tr>`).join('');
+  // Activity feed
+  const al = document.getElementById('activity-list');
+  if (!store.activity.length) {
+    al.innerHTML = '<div style="padding:30px;text-align:center;color:var(--gray-soft);font-size:14px">No activity yet</div>';
+    return;
   }
+  const iconMap = { donor:'🩸', recipient:'💚', request:'📋' };
+  al.innerHTML = store.activity.slice(0,8).map(a => `
+    <div class="activity-item">
+      <div class="a-icon ${a.type}">${iconMap[a.type]}</div>
+      <div class="a-text">
+        <div class="a-title">${a.label} <code>${a.id}</code></div>
+        <div class="a-sub">${cap(a.type)} · ${a.detail}</div>
+      </div>
+      <div class="a-time">${timeAgo(a.time)}</div>
+    </div>`).join('');
 }
 
-function statusBadge(status) {
-  const map = { pending:'Pending', matched:'Matched', urgent:'Urgent' };
-  return `<span class="status-badge ${status||'pending'}">
-    <span class="status-dot"></span>${map[status]||status}
-  </span>`;
+function renderDonorsTable() {
+  const tbody = document.getElementById('donors-table-body');
+  setText('donor-table-count', `${store.donors.length} registered`);
+  if (!store.donors.length) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="8">No donors yet — add one above</td></tr>';
+    return;
+  }
+  tbody.innerHTML = store.donors.map(d => `
+    <tr>
+      <td><code>${d.donor_id}</code></td>
+      <td class="td-name">${d.name}</td>
+      <td><span class="blood-badge">${d.blood_group}</span></td>
+      <td>${d.age}</td><td>${d.gender}</td><td>${d.phone}</td><td>${d.city}</td>
+      <td>${d.last_donation_date || '—'}</td>
+    </tr>`).join('');
 }
 
-/* ── Add Donor ── */
+function renderRecipientsTable() {
+  const tbody = document.getElementById('recip-table-body');
+  setText('recip-table-count', `${store.recipients.length} registered`);
+  if (!store.recipients.length) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="7">No recipients yet — add one above</td></tr>';
+    return;
+  }
+  tbody.innerHTML = store.recipients.map(r => `
+    <tr>
+      <td><code>${r.recipient_id}</code></td>
+      <td class="td-name">${r.name}</td>
+      <td><span class="blood-badge">${r.blood_group}</span></td>
+      <td>${r.age}</td><td>${r.gender}</td><td>${r.phone}</td><td>${r.city}</td>
+    </tr>`).join('');
+}
+
+function renderRequestsTable() {
+  const tbody = document.getElementById('req-table-body');
+  setText('req-table-count', `${store.requests.length} request${store.requests.length !== 1 ? 's' : ''}`);
+  if (!store.requests.length) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="6">No requests yet</td></tr>';
+    return;
+  }
+  tbody.innerHTML = [...store.requests].reverse().map(r => `
+    <tr>
+      <td><code>${r.request_id}</code></td>
+      <td>${r.recipient_id}</td>
+      <td><span class="blood-badge">${r.blood_group}</span></td>
+      <td>${r.request_date || '—'}</td><td>${r.city}</td>
+      <td>${statusBadge(r.status)}</td>
+    </tr>`).join('');
+}
+
+/* ══════════════════════════════════════════════
+   ACTIONS
+══════════════════════════════════════════════ */
 async function addDonor() {
   const payload = {
-    donor_id: val('d_id'), name: val('d_name'),
-    blood_group: val('d_group'), age: val('d_age'),
-    gender: val('d_gender'), phone: val('d_phone'),
-    city: val('d_city'), last_donation_date: val('d_date')
+    donor_id:           val('d_id').trim(),
+    name:               val('d_name').trim(),
+    blood_group:        val('d_group'),
+    age:                val('d_age'),
+    gender:             val('d_gender'),
+    phone:              val('d_phone').trim(),
+    city:               val('d_city').trim(),
+    last_donation_date: val('d_date')
   };
-  if (!payload.donor_id || !payload.name || !payload.blood_group) {
-    return toast('Please fill ID, Name & Blood Group', 'error');
-  }
+  if (!payload.donor_id || !payload.name || !payload.blood_group)
+    return toast('Donor ID, Name and Blood Group are required.', 'error');
+  if (store.donors.find(d => d.donor_id === payload.donor_id))
+    return toast(`Donor ID "${payload.donor_id}" already exists.`, 'error');
+
   try {
-    const res = await fetch('/add_donor', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
+    const res  = await fetch('/add_donor', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
     const data = await res.json();
-    toast(data.message || 'Donor added!');
-  } catch {
-    // offline demo
-    db.donors.push(payload);
-    toast(`${payload.name} registered as donor ✔`);
-  }
-  clearForm(['d_id','d_name','d_group','d_age','d_gender','d_phone','d_city','d_date']);
+    if (!data.success && data.message) return toast(data.message, 'error');
+  } catch { /* offline — fall through to local store */ }
+
+  store.addDonor(payload);
+  toast(`${payload.name} registered as donor ✔`);
+  clearFields(['d_id','d_name','d_group','d_age','d_gender','d_phone','d_city','d_date']);
 }
 
-/* ── Add Recipient ── */
 async function addRecipient() {
   const payload = {
-    recipient_id: val('r_id'), name: val('r_name'),
-    blood_group: val('r_group'), age: val('r_age'),
-    gender: val('r_gender'), phone: val('r_phone'), city: val('r_city')
+    recipient_id: val('r_id').trim(),
+    name:         val('r_name').trim(),
+    blood_group:  val('r_group'),
+    age:          val('r_age'),
+    gender:       val('r_gender'),
+    phone:        val('r_phone').trim(),
+    city:         val('r_city').trim()
   };
-  if (!payload.recipient_id || !payload.name || !payload.blood_group) {
-    return toast('Please fill ID, Name & Blood Group', 'error');
-  }
+  if (!payload.recipient_id || !payload.name || !payload.blood_group)
+    return toast('Recipient ID, Name and Blood Group are required.', 'error');
+  if (store.recipients.find(r => r.recipient_id === payload.recipient_id))
+    return toast(`Recipient ID "${payload.recipient_id}" already exists.`, 'error');
+
   try {
-    const res = await fetch('/add_recipient', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
+    const res  = await fetch('/add_recipient', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
     const data = await res.json();
-    toast(data.message || 'Recipient added!');
-  } catch {
-    db.recipients.push(payload);
-    toast(`${payload.name} registered as recipient ✔`);
-  }
-  clearForm(['r_id','r_name','r_group','r_age','r_gender','r_phone','r_city']);
+    if (!data.success && data.message) return toast(data.message, 'error');
+  } catch { /* offline */ }
+
+  store.addRecipient(payload);
+  toast(`${payload.name} registered as recipient ✔`);
+  clearFields(['r_id','r_name','r_group','r_age','r_gender','r_phone','r_city']);
 }
 
-/* ── Search Donor ── */
-async function searchDonor() {
-  const id = val('search_id').trim();
-  if (!id) return toast('Enter a Donor ID', 'error');
+async function addRequest() {
+  const payload = {
+    request_id:   val('req_id').trim(),
+    recipient_id: val('req_recipient').trim(),
+    blood_group:  val('req_group'),
+    request_date: val('req_date'),
+    city:         val('req_city').trim(),
+    status:       val('req_status') || 'pending'
+  };
+  if (!payload.request_id || !payload.recipient_id || !payload.blood_group)
+    return toast('Request ID, Recipient ID and Blood Group are required.', 'error');
+  if (store.requests.find(r => r.request_id === payload.request_id))
+    return toast(`Request ID "${payload.request_id}" already exists.`, 'error');
 
   try {
-    const res = await fetch(`/search_donor/${id}`);
+    const res  = await fetch('/create_request', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
     const data = await res.json();
-    if (data.error) throw new Error(data.error);
-    showResult(data);
-  } catch {
-    const found = db.donors.find(d => d.donor_id === id);
-    if (!found) return toast('Donor not found', 'error');
-    showResult(found);
+    if (!data.success && data.message) return toast(data.message, 'error');
+  } catch { /* offline */ }
+
+  store.addRequest(payload);
+  toast(`Request ${payload.request_id} created ✔`);
+  clearFields(['req_id','req_recipient','req_group','req_date','req_city']);
+  document.getElementById('req_status').selectedIndex = 0;
+}
+
+/* ══════════════════════════════════════════════
+   SEARCH & FILTER
+══════════════════════════════════════════════ */
+async function searchDonor() {
+  const id = val('search_id').trim();
+  if (!id) return toast('Enter a Donor ID to search.', 'error');
+
+  // 1. Check local store first (instant)
+  let donor = store.donors.find(d => d.donor_id === id);
+
+  // 2. If not in local store, try backend
+  if (!donor) {
+    try {
+      const res  = await fetch(`/search_donor/${encodeURIComponent(id)}`);
+      const data = await res.json();
+      if (data.donor) donor = data.donor;
+      else if (data.success === false) { toast('Donor not found.', 'error'); hideResult(); return; }
+    } catch { /* backend not reachable */ }
   }
+
+  if (!donor) { toast('Donor not found.', 'error'); hideResult(); return; }
+  showResult(donor);
+  // Clear filter UI
+  document.getElementById('filter-results').style.display = 'none';
 }
 
 function showResult(d) {
   const card = document.getElementById('result-card');
   card.classList.add('visible');
   document.getElementById('res-avatar').textContent = (d.name || 'D')[0].toUpperCase();
-  document.getElementById('res-name').textContent = d.name || '—';
-  document.getElementById('res-id-label').textContent = 'ID: ' + (d.donor_id || '—');
-  document.getElementById('res-blood').textContent = d.blood_group || '—';
+  document.getElementById('res-name').textContent   = d.name || '—';
+  document.getElementById('res-sub').textContent    = `ID: ${d.donor_id || '—'}`;
+  document.getElementById('res-blood').textContent  = d.blood_group || '—';
 
   const fields = [
-    { label: 'Age',   value: d.age   || '—' },
-    { label: 'Gender',value: d.gender || '—' },
-    { label: 'Phone', value: d.phone  || '—' },
-    { label: 'City',  value: d.city   || '—' },
-    { label: 'Last Donation', value: d.last_donation_date || '—' }
+    { l:'Age',           v: d.age    || '—' },
+    { l:'Gender',        v: d.gender || '—' },
+    { l:'Phone',         v: d.phone  || '—' },
+    { l:'City',          v: d.city   || '—' },
+    { l:'Last Donation', v: d.last_donation_date || '—' }
   ];
-  document.getElementById('res-fields').innerHTML = fields.map(f =>
-    `<div class="result-field">
-      <div class="rf-label">${f.label}</div>
-      <div class="rf-value">${f.value}</div>
-    </div>`
-  ).join('');
+  document.getElementById('res-fields').innerHTML =
+    fields.map(f => `<div class="rf"><div class="rfl">${f.l}</div><div class="rfv">${f.v}</div></div>`).join('');
+}
+
+function hideResult() {
+  document.getElementById('result-card').classList.remove('visible');
 }
 
 function clearSearch() {
   document.getElementById('search_id').value = '';
-  document.getElementById('result-card').classList.remove('visible');
+  hideResult();
+  document.getElementById('filter-results').style.display = 'none';
+  document.getElementById('filter_group').selectedIndex = 0;
+  document.getElementById('filter_city').value = '';
 }
 
-/* ── Add Request ── */
-async function addRequest() {
-  const payload = {
-    request_id: val('req_id'), recipient_id: val('req_recipient'),
-    blood_group: val('req_group'), request_date: val('req_date'),
-    city: val('req_city'), status: val('req_status') || 'pending'
-  };
-  if (!payload.request_id || !payload.recipient_id || !payload.blood_group) {
-    return toast('Please fill Request ID, Recipient ID & Blood Group', 'error');
-  }
-  try {
-    const res = await fetch('/create_request', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    const data = await res.json();
-    toast(data.message || 'Request created!');
-  } catch {
-    db.requests.push(payload);
-    toast(`Request ${payload.request_id} created ✔`);
-  }
-  updateRequestsTable();
-  clearForm(['req_id','req_recipient','req_group','req_date','req_city','req_status']);
-}
+function filterDonors() {
+  const group = val('filter_group');
+  const city  = val('filter_city').trim().toLowerCase();
+  if (!group && !city) { document.getElementById('filter-results').style.display = 'none'; return; }
 
-function updateRequestsTable() {
-  const tbody = document.getElementById('requests-body');
-  if (!db.requests.length) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--gray-soft);">No requests yet</td></tr>';
+  let results = [...store.donors];
+  if (group) results = results.filter(d => d.blood_group === group);
+  if (city)  results = results.filter(d => d.city.toLowerCase().includes(city));
+
+  hideResult();
+  document.getElementById('filter-results').style.display = 'block';
+  setText('filter-count', `${results.length} donor${results.length !== 1 ? 's' : ''} found`);
+
+  const tbody = document.getElementById('filter-table-body');
+  if (!results.length) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="7">No donors match these filters</td></tr>';
     return;
   }
-  tbody.innerHTML = db.requests.slice().reverse().map(r => `
+  tbody.innerHTML = results.map(d => `
     <tr>
-      <td><strong>${r.request_id}</strong></td>
-      <td>${r.recipient_id}</td>
-      <td><span class="blood-badge" style="width:auto;border-radius:6px;padding:3px 10px;font-size:13px">${r.blood_group}</span></td>
-      <td>${r.city}</td>
-      <td>${r.request_date || '—'}</td>
-      <td>${statusBadge(r.status)}</td>
+      <td><code>${d.donor_id}</code></td>
+      <td class="td-name">${d.name}</td>
+      <td><span class="blood-badge">${d.blood_group}</span></td>
+      <td>${d.age}</td><td>${d.phone}</td><td>${d.city}</td>
+      <td>${d.last_donation_date || '—'}</td>
     </tr>`).join('');
 }
 
-/* ── Helpers ── */
-function val(id) { return document.getElementById(id).value; }
+function clearFilter() {
+  document.getElementById('filter_group').selectedIndex = 0;
+  document.getElementById('filter_city').value = '';
+  document.getElementById('filter-results').style.display = 'none';
+}
 
-function clearForm(ids) {
+/* ══════════════════════════════════════════════
+   UTILS
+══════════════════════════════════════════════ */
+function switchTab(name, el) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('panel-' + name).classList.add('active');
+}
+
+function val(id)     { return document.getElementById(id)?.value || ''; }
+function setText(id, v) { const e = document.getElementById(id); if (e) e.textContent = v; }
+function cap(s)      { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+function clearFields(ids) {
   ids.forEach(id => {
     const el = document.getElementById(id);
+    if (!el) return;
     if (el.tagName === 'SELECT') el.selectedIndex = 0;
     else el.value = '';
   });
 }
 
-/* ── Init ── */
-refreshDashboard();
+function statusBadge(s) {
+  const m = { pending:'Pending', matched:'Matched', urgent:'Urgent' };
+  const c = ['pending','matched','urgent'].includes(s) ? s : 'pending';
+  return `<span class="status-badge ${c}"><span class="sdot"></span>${m[s] || s}</span>`;
+}
+
+function timeAgo(date) {
+  const sec = Math.floor((new Date() - date) / 1000);
+  if (sec < 60)  return 'just now';
+  if (sec < 3600) return Math.floor(sec/60) + 'm ago';
+  return Math.floor(sec/3600) + 'h ago';
+}
+
+function toast(msg, type = 'success') {
+  const icons = { success:'✅', error:'❌', info:'ℹ️' };
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span>${icons[type]}</span> ${msg}`;
+  document.getElementById('toast-container').appendChild(t);
+  setTimeout(() => t.remove(), 3200);
+}
+
+/* ── Boot ── */
+renderAll();
+
+/* ── Refresh activity time labels every 30s ── */
+setInterval(() => { if (store.activity.length) renderDashboard(); }, 30000);
 </script>
 </body>
 </html>
