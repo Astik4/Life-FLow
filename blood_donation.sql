@@ -37,7 +37,6 @@ CREATE TABLE blood_request (
 );
 
 --Matches Table
-
 CREATE TABLE matches (
     Match_id  VARCHAR(50)  PRIMARY KEY,
     Donor_id  VARCHAR(50)  NOT NULL,
