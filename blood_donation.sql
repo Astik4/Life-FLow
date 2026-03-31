@@ -1,5 +1,5 @@
 -- Create Database
-CREATE DATABASE IF NOT EXISTS blood_donation;
+CREATE DATABASE blood_donation;
 USE blood_donation;
 
 -- Donor Table
@@ -36,6 +36,20 @@ CREATE TABLE blood_request (
     FOREIGN KEY (Recipient_id) REFERENCES recipient(Recipient_id)
 );
 
+--Matches Table
+
+CREATE TABLE matches (
+    Match_id  VARCHAR(50)  PRIMARY KEY,
+    Donor_id  VARCHAR(50)  NOT NULL,
+    Donor_name VARCHAR(100) DEFAULT NULL,
+    Recipient_id VARCHAR(50)  NOT NULL,
+    Recipient_name VARCHAR(100) DEFAULT NULL,
+    Blood_Group VARCHAR(5)   DEFAULT NULL,
+    Match_date  DATE,
+    City VARCHAR(100) DEFAULT NULL,
+    FOREIGN KEY (Donor_id) REFERENCES donor(Donor_id)         ON DELETE CASCADE,
+    FOREIGN KEY (Recipient_id) REFERENCES recipient(Recipient_id) ON DELETE CASCADE
+);
 
 -- Sample Donor
 INSERT INTO donor VALUES
@@ -48,3 +62,7 @@ INSERT INTO recipient VALUES
 -- Sample Request
 INSERT INTO blood_request VALUES
 ('REQ001', 'R001', 'A+', '2026-03-20', 'Delhi', 'Pending');
+
+-- Sample Match
+INSERT INTO matches VALUES  
+('M001', 'DNR-001', 'Rahul Sharma', 'RCP-001', 'Amit Kumar', 'A+', '2026-03-21', 'Delhi');
