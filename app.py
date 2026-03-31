@@ -41,10 +41,7 @@ def safe_cursor():
     return cursor
 
 
-# ─────────────────────────────────────────────
 #  RESPONSE HELPERS
-# ─────────────────────────────────────────────
-
 def success(data=None, message="Success", code=200):
     body = {"success": True, "message": message}
     if data is not None:
@@ -55,10 +52,7 @@ def error(message="An error occurred", code=500):
     return jsonify({"success": False, "message": message}), code
 
 
-# ─────────────────────────────────────────────
 #  AUTH GUARD DECORATOR
-# ─────────────────────────────────────────────
-
 def admin_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -67,11 +61,7 @@ def admin_required(f):
         return f(*args, **kwargs)
     return decorated
 
-
-# ─────────────────────────────────────────────
 #  PAGE ROUTES
-# ─────────────────────────────────────────────
-
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -92,10 +82,7 @@ def logout():
     return redirect("/admin")
 
 
-# ─────────────────────────────────────────────
 #  ADMIN AUTH
-# ─────────────────────────────────────────────
-
 ADMIN_USERNAME      = "Astik"
 ADMIN_PASSWORD_HASH = "pbkdf2:sha256:1000000$SEbIrOcXrnNkJYe4$2dcd2d212dfb534eefd7d843ecc2f46f9ea375d1cc456d431b647d4f2976a512"
 
@@ -118,10 +105,7 @@ def admin_login():
     return jsonify({"success": False, "message": "Invalid username or password."}), 401
 
 
-# ─────────────────────────────────────────────
 #  DONORS
-# ─────────────────────────────────────────────
-
 @app.route("/add_donor", methods=["POST"])
 def add_donor():
     data = request.get_json(silent=True) or {}
