@@ -202,12 +202,8 @@ def delete_donor(donor_id):
     except mysql.connector.Error as err:
         print(f"Error deleting donor: {err}")
         return error("Failed to delete donor.")
-
-
-# ─────────────────────────────────────────────
+    
 #  RECIPIENTS
-# ─────────────────────────────────────────────
-
 @app.route("/add_recipient", methods=["POST"])
 def add_recipient():
     data = request.get_json(silent=True) or {}
@@ -302,10 +298,7 @@ def delete_recipient(recipient_id):
         return error("Failed to delete recipient.")
 
 
-# ─────────────────────────────────────────────
 #  BLOOD REQUESTS
-# ─────────────────────────────────────────────
-
 @app.route("/create_request", methods=["POST"])
 def create_request():
     data = request.get_json(silent=True) or {}
@@ -373,10 +366,7 @@ def delete_request(request_id):
         return error("Failed to delete blood request.")
 
 
-# ─────────────────────────────────────────────
 #  MATCHES
-# ─────────────────────────────────────────────
-
 @app.route("/find_matches")
 def find_matches():
     """Return donors filtered by blood_group and/or city for the matches panel."""
@@ -498,10 +488,6 @@ def delete_match(match_id):
         print(f"Error deleting match: {err}")
         return error("Failed to delete match.")
 
-
-# ─────────────────────────────────────────────
-#  RUN
-# ─────────────────────────────────────────────
 
 if __name__ == "__main__":
     app.run(debug=True)
