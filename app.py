@@ -1,24 +1,22 @@
 import mysql.connector
-from flask import Flask, request, render_template, jsonify, redirect, session
-from werkzeug.security import check_password_hash
-from dotenv import load_dotenv
-import os
-
-load_dotenv()
+from flask import Flask, request, render_template, jsonify
+import hashlib
 
 app = Flask(__name__)
-app.secret_key = os.getenv("SECRET_KEY")
 
+# ─────────────────────────────────────────────
 #  DATABASE CONNECTION
-def get_db():
-    return mysql.connector.connect(
-    host=os.getenv("DB_HOST"),
-    user=os.getenv("DB_USER"),
-    password=os.getenv("DB_PASSWORD"),
-    database=os.getenv("DB_NAME"),
-    auth_plugin="mysql_native_password"
-)
+# ─────────────────────────────────────────────
 
+def get_db():
+    """Create and return a fresh DB connection."""
+    return mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="",
+        database="blood_donation",
+        auth_plugin="mysql_native_password"
+    )
 
 try:
     db = get_db()
@@ -41,7 +39,10 @@ def safe_cursor():
     return cursor
 
 
+# ─────────────────────────────────────────────
 #  HELPER
+# ─────────────────────────────────────────────
+
 def success(data=None, message="Success", code=200):
     body = {"success": True, "message": message}
     if data is not None:
@@ -53,7 +54,10 @@ def error(message="An error occurred", code=500):
     return jsonify({"success": False, "message": message}), code
 
 
+# ─────────────────────────────────────────────
 #  PAGE ROUTES
+# ─────────────────────────────────────────────
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -66,45 +70,34 @@ def admin():
 
 @app.route("/admin_dashboard")
 def admin_dashboard():
-    if not session.get("admin_logged_in"):
-        return redirect("/admin")
     return render_template("admin.html")
 
-#LOGOUT
-@app.route("/logout")
-def logout():
-    session.pop("admin_logged_in", None)
-    return redirect("/")
 
-
+# ─────────────────────────────────────────────
 #  ADMIN AUTH
-ADMIN_USERNAME = "Astik"
+# ─────────────────────────────────────────────
 
-ADMIN_PASSWORD_HASH = "pbkdf2:sha256:1000000$SEbIrOcXrnNkJYe4$2dcd2d212dfb534eefd7d843ecc2f46f9ea375d1cc456d431b647d4f2976a512"
+ADMIN_USERNAME = "Astik"
+ADMIN_PASSWORD = ""          # ← change to a real password
 
 @app.route("/admin_login", methods=["POST"])
 def admin_login():
-    data = request.get_json()
-
-    if not data:
-        return jsonify({"success": False, "message": "No data received"}), 400
-
+    data = request.get_json(silent=True) or {}
     username = data.get("username", "").strip()
     password = data.get("password", "")
 
     if not username or not password:
-        return jsonify({"success": False, "message": "Username and password are required."}), 400
+        return error("Username and password are required.", 400)
 
-    if username == ADMIN_USERNAME and check_password_hash(ADMIN_PASSWORD_HASH, password):
-        session["admin_logged_in"] = True
-        return jsonify({"success": True})
-    
-    if not session.get("admin_logged_in"):
-        return error("Unauthorized", 403)
+    if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+        return success(message="Login successful.")
+    return error("Invalid username or password.", 401)
 
-    return jsonify({"success": False, "message": "Invalid username or password"}), 401
 
+# ─────────────────────────────────────────────
 #  DONORS
+# ─────────────────────────────────────────────
+
 @app.route("/add_donor", methods=["POST"])
 def add_donor():
     data = request.get_json(silent=True) or {}
@@ -136,7 +129,7 @@ def add_donor():
 def all_donors():
     try:
         cur = safe_cursor()
-        cur.execute("SELECT * FROM donor")
+        cur.execute("SELECT Donor_id, Blood_Group, Name, Age, Gender, Phone, City, Last_Donation_Date FROM donor")
         rows = cur.fetchall()
         donors = [
             {
@@ -161,7 +154,7 @@ def all_donors():
 def search_donor(donor_id):
     try:
         cur = safe_cursor()
-        cur.execute("SELECT * FROM donor WHERE Donor_id and = %s", (donor_id,))
+        cur.execute("SELECT Donor_id, Blood_Group, Name, Age, Gender, Phone, City, Last_Donation_Date FROM donor WHERE Donor_id = %s", (donor_id,))
         row = cur.fetchone()
         if not row:
             return error("Donor not found.", 404)
@@ -194,7 +187,11 @@ def delete_donor(donor_id):
         print(f"Error deleting donor: {err}")
         return error("Failed to delete donor.")
 
+
+# ─────────────────────────────────────────────
 #  RECIPIENTS
+# ─────────────────────────────────────────────
+
 @app.route("/add_recipient", methods=["POST"])
 def add_recipient():
     data = request.get_json(silent=True) or {}
@@ -225,7 +222,7 @@ def add_recipient():
 def all_recipients():
     try:
         cur = safe_cursor()
-        cur.execute("SELECT * FROM recipient")
+        cur.execute("SELECT Recipient_id, Blood_Group, Name, Age, Gender, Phone, City FROM recipient")
         rows = cur.fetchall()
         recipients = [
             {
@@ -266,22 +263,12 @@ def search_recipient(recipient_id):
     except mysql.connector.Error as err:
         print(f"Error fetching recipient: {err}")
         return error("Failed to fetch recipient.")
-    
-@app.route("/delete_recipient/<recipient_id>", methods=["DELETE"])
-def delete_recipient(recipient_id):
-    try:
-        cur = safe_cursor()
-        cur.execute("DELETE FROM recipient WHERE Recipient_id = %s", (recipient_id,))
-        db.commit()
-        if cur.rowcount == 0:
-            return error("Recipient not found.", 404)
-        return success(message=f"Recipient '{recipient_id}' deleted successfully.")
-    except mysql.connector.Error as err:
-        print(f"Error deleting recipient: {err}")
-        return error("Failed to delete recipient.")
 
 
+# ─────────────────────────────────────────────
 #  BLOOD REQUESTS
+# ─────────────────────────────────────────────
+
 @app.route("/create_request", methods=["POST"])
 def create_request():
     data = request.get_json(silent=True) or {}
@@ -312,7 +299,7 @@ def create_request():
 def all_requests():
     try:
         cur = safe_cursor()
-        cur.execute("SELECT * FROM blood_request")
+        cur.execute("SELECT Request_id, Recipient_id, Blood_Group, Request_date, City, Status FROM blood_request")
         rows = cur.fetchall()
         requests = [
             {
@@ -329,20 +316,11 @@ def all_requests():
     except mysql.connector.Error as err:
         print(f"Error fetching requests: {err}")
         return error("Failed to fetch blood requests.")
-    
-@app.route("/delete_request/<request_id>", methods=["DELETE"])
-def delete_request(request_id):
-    try:
-        cur = safe_cursor()
-        cur.execute("DELETE FROM blood_request WHERE Request_id = %s", (request_id,))
-        db.commit()
-        if cur.rowcount == 0:
-            return error("Blood request not found.", 404)
-        return success(message=f"Blood request '{request_id}' deleted successfully.")
-    except mysql.connector.Error as err:
-        print(f"Error deleting blood request: {err}")
-        return error("Failed to delete blood request.")
-    
+
+
+# ─────────────────────────────────────────────
+#  RUN
+# ─────────────────────────────────────────────
 
 if __name__ == "__main__":
     app.run(debug=True)
