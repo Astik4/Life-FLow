@@ -519,9 +519,34 @@ function renderRequests(){
       <td>${blood(r.blood_group)}</td>
       <td>${r.request_date||'—'}</td><td>${r.city}</td>
       <td>${sbadge(r.status)}</td>
-      <td><button class="bd" onclick="askDel('request','${esc(r.request_id)}','${esc(r.request_id)}')">🗑 Delete</button></td>
+      <td>
+        ${r.status && r.status.toLowerCase() === 'matched' ? 
+          `<button class="bm" style="margin-right:8px; opacity:0.6; cursor:not-allowed;" disabled>🔗 Matched</button>` : 
+          `<button class="bm" style="margin-right:8px" onclick="initiateMatchFromRequest('${esc(r.recipient_id)}','${esc(r.blood_group)}','${esc(r.city)}')">🔗 Match</button>`
+        }
+        <button class="bd" onclick="askDel('request','${esc(r.request_id)}','${esc(r.request_id)}')">🗑 Delete</button>
+      </td>
     </tr>`).join('');
   updateStats();
+}
+
+function initiateMatchFromRequest(recipientId, bloodGroup, city) {
+  // 1. Switch to matches tab
+  const tabEl = document.querySelector('.nav-tab.im') || document.querySelectorAll('.nav-tab')[3];
+  switchTab('matches', tabEl);
+  
+  // 2. Populate search fields
+  const mgSelect = $('mg');
+  if (mgSelect) mgSelect.value = bloodGroup ? bloodGroup.trim().toUpperCase() : '';
+  
+  const mcInput = $('mc');
+  if (mcInput) mcInput.value = city ? city.trim() : '';
+  
+  const mridInput = $('mrid');
+  if (mridInput) mridInput.value = recipientId ? recipientId.trim().toUpperCase() : '';
+  
+  // 3. Trigger compatibility search
+  findCompatible();
 }
 
 /* ══════════════════════════════════════════════
@@ -564,9 +589,9 @@ async function doDelete(type,id,name){
    MATCHES — FIND COMPATIBLE
 ══════════════════════════════════════════════ */
 function findCompatible(){
-  const group = val('mg').trim();
+  const group = val('mg').trim().toUpperCase();
   const city  = val('mc').trim().toLowerCase();
-  const rid   = val('mrid').trim();
+  const rid   = val('mrid').trim().toUpperCase();
 
   if(!group && !city){
     $('match-hint').textContent = '⚠ Enter at least a blood group or city.';
@@ -577,7 +602,7 @@ function findCompatible(){
 
   // Filter from loaded donors
   let results = [...DB.donors];
-  if(group) results = results.filter(d => d.blood_group === group);
+  if(group) results = results.filter(d => d.blood_group.toUpperCase() === group);
   if(city)  results = results.filter(d => d.city.toLowerCase().includes(city));
 
   // Show results panel
@@ -611,13 +636,13 @@ function clearMatchSearch(){
 }
 
 function askMatch(donorId, donorName, recipId){
-  const trimmedRecipId = recipId ? recipId.trim() : '';
+  const trimmedRecipId = recipId ? recipId.trim().toUpperCase() : '';
   if (!trimmedRecipId) {
     toast('Please enter a Recipient ID in Step 1 for matching.', 'error');
     return;
   }
   // Check if the recipient exists in DB.recipients
-  const recip = DB.recipients.find(r => r.recipient_id === trimmedRecipId);
+  const recip = DB.recipients.find(r => r.recipient_id.toUpperCase() === trimmedRecipId);
   if (!recip) {
     toast(`Recipient ID "${trimmedRecipId}" not found in registry. Add the recipient first.`, 'error');
     return;
@@ -634,8 +659,8 @@ function askMatch(donorId, donorName, recipId){
 async function recordMatch(donorId,donorName,recipId){
   const matchId = 'MCH-'+String(DB.matches.length+1).padStart(3,'0');
   const today   = new Date().toISOString().split('T')[0];
-  const donor   = DB.donors.find(d=>d.donor_id===donorId);
-  const recip   = DB.recipients.find(r=>r.recipient_id===recipId);
+  const donor   = DB.donors.find(d=>d.donor_id.toUpperCase()===donorId.toUpperCase());
+  const recip   = DB.recipients.find(r=>r.recipient_id.toUpperCase()===recipId.toUpperCase());
 
   const payload = {
     match_id:       matchId,
@@ -651,13 +676,18 @@ async function recordMatch(donorId,donorName,recipId){
   try{
     const res=await fetch('/create_match',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     const d=await res.json();
-    toast(d.message||'Match recorded!','info');
+    if (res.ok) {
+      toast(d.message||'Match recorded!','info');
+      await loadRequests();
+      await loadAllMatches();
+    } else {
+      toast(d.message || 'Failed to record match.', 'error');
+    }
   }catch{
     DB.matches.push(payload);
     toast(`Match ${matchId} recorded successfully!`,'info');
   }
   updateStats();
-  if($('all-matches-section').style.display!=='none') loadAllMatches();
 }
 
 /* ══════════════════════════════════════════════

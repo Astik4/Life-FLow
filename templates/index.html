@@ -500,27 +500,11 @@ function renderRequestsTable() {
   const tbody = document.getElementById('req-table-body');
   setText('req-table-count', `${store.requests.length} request${store.requests.length !== 1 ? 's' : ''}`);
   if (!store.requests.length) {
-    tbody.innerHTML = '<tr class="empty-row"><td colspan="6">No requests yet</td></tr>';
-    return;
-  }
-  tbody.innerHTML = [...store.requests].reverse().map(r => `
-    <tr>
-      <td><code>${r.request_id}</code></td>
-      <td>${r.recipient_id}</td>
-      <td><span class="blood-badge">${r.blood_group}</span></td>
-      <td>${r.request_date || '—'}</td><td>${r.city}</td>
-      <td>${statusBadge(r.status)}</td>
-    </tr>`).join('');
-}
-
-/* ══════════════════════════════════════════════
-   ACTIONS
-══════════════════════════════════════════════ */
-async function addDonor() {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="6">Noasync function addDonor() {
   const payload = {
-    donor_id:           val('d_id').trim(),
+    donor_id:           val('d_id').trim().toUpperCase(),
     name:               val('d_name').trim(),
-    blood_group:        val('d_group'),
+    blood_group:        val('d_group').toUpperCase(),
     age:                val('d_age'),
     gender:             val('d_gender'),
     phone:              val('d_phone').trim(),
@@ -529,7 +513,7 @@ async function addDonor() {
   };
   if (!payload.donor_id || !payload.name || !payload.blood_group || !payload.age)
     return toast('Donor ID, Name, Blood Group, and Age are required.', 'error');
-  if (store.donors.find(d => d.donor_id === payload.donor_id))
+  if (store.donors.find(d => d.donor_id.toUpperCase() === payload.donor_id))
     return toast(`Donor ID "${payload.donor_id}" already exists.`, 'error');
 
   try {
@@ -549,9 +533,9 @@ async function addDonor() {
 
 async function addRecipient() {
   const payload = {
-    recipient_id: val('r_id').trim(),
+    recipient_id: val('r_id').trim().toUpperCase(),
     name:         val('r_name').trim(),
-    blood_group:  val('r_group'),
+    blood_group:  val('r_group').toUpperCase(),
     age:          val('r_age'),
     gender:       val('r_gender'),
     phone:        val('r_phone').trim(),
@@ -559,7 +543,7 @@ async function addRecipient() {
   };
   if (!payload.recipient_id || !payload.name || !payload.blood_group || !payload.age)
     return toast('Recipient ID, Name, Blood Group, and Age are required.', 'error');
-  if (store.recipients.find(r => r.recipient_id === payload.recipient_id))
+  if (store.recipients.find(r => r.recipient_id.toUpperCase() === payload.recipient_id))
     return toast(`Recipient ID "${payload.recipient_id}" already exists.`, 'error');
 
   try {
@@ -579,16 +563,16 @@ async function addRecipient() {
 
 async function addRequest() {
   const payload = {
-    request_id:   val('req_id').trim(),
-    recipient_id: val('req_recipient').trim(),
-    blood_group:  val('req_group'),
+    request_id:   val('req_id').trim().toUpperCase(),
+    recipient_id: val('req_recipient').trim().toUpperCase(),
+    blood_group:  val('req_group').toUpperCase(),
     request_date: val('req_date'),
     city:         val('req_city').trim(),
     status:       val('req_status') || 'pending'
   };
   if (!payload.request_id || !payload.recipient_id || !payload.blood_group)
     return toast('Request ID, Recipient ID and Blood Group are required.', 'error');
-  if (store.requests.find(r => r.request_id === payload.request_id))
+  if (store.requests.find(r => r.request_id.toUpperCase() === payload.request_id))
     return toast(`Request ID "${payload.request_id}" already exists.`, 'error');
 
   try {
@@ -609,7 +593,29 @@ async function addRequest() {
 
 /* ══════════════════════════════════════════════
    SEARCH & FILTER
-══════════════════════════════════════════════ */
+ ══════════════════════════════════════════════ */
+async function searchDonor() {
+  const id = val('search_id').trim().toUpperCase();
+  if (!id) return toast('Enter a Donor ID to search.', 'error');
+
+  // 1. Check local store first (instant)
+  let donor = store.donors.find(d => d.donor_id.toUpperCase() === id);
+
+  // 2. If not in local store, try backend
+  if (!donor) {
+    try {
+      const res  = await fetch(`/search_donor/${encodeURIComponent(id)}`);
+      const data = await res.json();
+      if (data.donor) donor = data.donor;
+      else if (data.success === false) { toast('Donor not found.', 'error'); hideResult(); return; }
+    } catch { /* backend not reachable */ }
+  }
+
+  if (!donor) { toast('Donor not found.', 'error'); hideResult(); return; }
+  showResult(donor);
+  // Clear filter UI
+  document.getElementById('filter-results').style.display = 'none';
+}��═══════════════════ */
 async function searchDonor() {
   const id = val('search_id').trim();
   if (!id) return toast('Enter a Donor ID to search.', 'error');

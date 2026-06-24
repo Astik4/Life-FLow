@@ -138,8 +138,8 @@ def add_donor():
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
     """
     values = (
-        str(data["donor_id"]).strip(),
-        str(data["blood_group"]).strip(),
+        str(data["donor_id"]).strip().upper(),
+        str(data["blood_group"]).strip().upper(),
         str(data["name"]).strip(),
         int(data["age"]),
         gender,
@@ -188,13 +188,13 @@ def all_donors():
 
 @app.route("/search_donor/<donor_id>", methods=["GET"])
 def search_donor(donor_id):
+    donor_id_upper = donor_id.strip().upper()
     try:
         cur = safe_cursor()
-        # ✅ FIXED: original had broken SQL "WHERE Donor_id and = %s"
         cur.execute("""
             SELECT Donor_id, Blood_Group, Name, Age, Gender, Phone, City, Last_Donation_Date
-            FROM donor WHERE Donor_id = %s
-        """, (donor_id,))
+            FROM donor WHERE UPPER(Donor_id) = %s
+        """, (donor_id_upper,))
         row = cur.fetchone()
         if not row:
             return error("Donor not found.", 404)
@@ -217,13 +217,14 @@ def search_donor(donor_id):
 @app.route("/delete_donor/<donor_id>", methods=["DELETE"])
 @admin_required
 def delete_donor(donor_id):
+    donor_id_upper = donor_id.strip().upper()
     try:
         cur = safe_cursor()
-        cur.execute("DELETE FROM donor WHERE Donor_id = %s", (donor_id,))
+        cur.execute("DELETE FROM donor WHERE UPPER(Donor_id) = %s", (donor_id_upper,))
         db.commit()
         if cur.rowcount == 0:
             return error("Donor not found.", 404)
-        return success(message=f"Donor '{donor_id}' deleted successfully.")
+        return success(message=f"Donor '{donor_id_upper}' deleted successfully.")
     except mysql.connector.Error as err:
         print(f"Error deleting donor: {err}")
         return error("Failed to delete donor.")
@@ -247,8 +248,8 @@ def add_recipient():
         VALUES (%s, %s, %s, %s, %s, %s, %s)
     """
     values = (
-        str(data["recipient_id"]).strip(),
-        str(data["blood_group"]).strip(),
+        str(data["recipient_id"]).strip().upper(),
+        str(data["blood_group"]).strip().upper(),
         str(data["name"]).strip(),
         int(data["age"]),
         gender,
@@ -295,12 +296,13 @@ def all_recipients():
 
 @app.route("/search_recipient/<recipient_id>", methods=["GET"])
 def search_recipient(recipient_id):
+    recipient_id_upper = recipient_id.strip().upper()
     try:
         cur = safe_cursor()
         cur.execute("""
             SELECT Recipient_id, Blood_Group, Name, Age, Gender, Phone, City
-            FROM recipient WHERE Recipient_id = %s
-        """, (recipient_id,))
+            FROM recipient WHERE UPPER(Recipient_id) = %s
+        """, (recipient_id_upper,))
         row = cur.fetchone()
         if not row:
             return error("Recipient not found.", 404)
@@ -322,13 +324,14 @@ def search_recipient(recipient_id):
 @app.route("/delete_recipient/<recipient_id>", methods=["DELETE"])
 @admin_required
 def delete_recipient(recipient_id):
+    recipient_id_upper = recipient_id.strip().upper()
     try:
         cur = safe_cursor()
-        cur.execute("DELETE FROM recipient WHERE Recipient_id = %s", (recipient_id,))
+        cur.execute("DELETE FROM recipient WHERE UPPER(Recipient_id) = %s", (recipient_id_upper,))
         db.commit()
         if cur.rowcount == 0:
             return error("Recipient not found.", 404)
-        return success(message=f"Recipient '{recipient_id}' deleted successfully.")
+        return success(message=f"Recipient '{recipient_id_upper}' deleted successfully.")
     except mysql.connector.Error as err:
         print(f"Error deleting recipient: {err}")
         return error("Failed to delete recipient.")
@@ -347,15 +350,16 @@ def create_request():
     request_date = clean_optional_string(data.get("request_date"))
     city = clean_optional_string(data.get("city"))
     status = clean_optional_string(data.get("status")) or "pending"
+    status = status.strip().lower()
 
     query = """
         INSERT INTO blood_request (Request_id, Recipient_id, Blood_Group, Request_date, City, Status)
         VALUES (%s, %s, %s, %s, %s, %s)
     """
     values = (
-        str(data["request_id"]).strip(),
-        str(data["recipient_id"]).strip(),
-        str(data["blood_group"]).strip(),
+        str(data["request_id"]).strip().upper(),
+        str(data["recipient_id"]).strip().upper(),
+        str(data["blood_group"]).strip().upper(),
         request_date,
         city,
         status
@@ -400,13 +404,14 @@ def all_requests():
 @app.route("/delete_request/<request_id>", methods=["DELETE"])
 @admin_required
 def delete_request(request_id):
+    request_id_upper = request_id.strip().upper()
     try:
         cur = safe_cursor()
-        cur.execute("DELETE FROM blood_request WHERE Request_id = %s", (request_id,))
+        cur.execute("DELETE FROM blood_request WHERE UPPER(Request_id) = %s", (request_id_upper,))
         db.commit()
         if cur.rowcount == 0:
             return error("Blood request not found.", 404)
-        return success(message=f"Blood request '{request_id}' deleted successfully.")
+        return success(message=f"Blood request '{request_id_upper}' deleted successfully.")
     except mysql.connector.Error as err:
         print(f"Error deleting blood request: {err}")
         return error("Failed to delete blood request.")
@@ -416,7 +421,7 @@ def delete_request(request_id):
 @app.route("/find_matches")
 def find_matches():
     """Return donors filtered by blood_group and/or city for the matches panel."""
-    blood_group = request.args.get("blood_group", "").strip()
+    blood_group = request.args.get("blood_group", "").strip().upper()
     city        = request.args.get("city", "").strip()
 
     if not blood_group and not city:
@@ -424,7 +429,7 @@ def find_matches():
 
     conditions, values = [], []
     if blood_group:
-        conditions.append("Blood_Group = %s")
+        conditions.append("UPPER(Blood_Group) = %s")
         values.append(blood_group)
     if city:
         conditions.append("LOWER(City) LIKE %s")
@@ -473,27 +478,52 @@ def create_match():
     match_date = clean_optional_string(data.get("match_date"))
     city = clean_optional_string(data.get("city"))
 
-    query = """
-        INSERT INTO matches
-            (Match_id, Donor_id, Donor_name, Recipient_id, Recipient_name, Blood_Group, Match_date, City)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-    """
-    values = (
-        str(data["match_id"]).strip(),
-        str(data["donor_id"]).strip(),
-        donor_name,
-        str(data["recipient_id"]).strip(),
-        recipient_name,
-        blood_group,
-        match_date,
-        city
-    )
+    match_id = str(data["match_id"]).strip().upper()
+    donor_id = str(data["donor_id"]).strip().upper()
+    recipient_id = str(data["recipient_id"]).strip().upper()
+
+    if blood_group:
+        blood_group = blood_group.strip().upper()
+
     try:
         cur = safe_cursor()
+        
+        # Check for duplicate match (same donor and recipient already matched)
+        cur.execute("""
+            SELECT Match_id FROM matches 
+            WHERE UPPER(Donor_id) = %s AND UPPER(Recipient_id) = %s
+        """, (donor_id, recipient_id))
+        if cur.fetchone():
+            cur.close()
+            return error("Match already exists between this donor and recipient.", 400)
+
+        query = """
+            INSERT INTO matches
+                (Match_id, Donor_id, Donor_name, Recipient_id, Recipient_name, Blood_Group, Match_date, City)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        values = (
+            match_id,
+            donor_id,
+            donor_name,
+            recipient_id,
+            recipient_name,
+            blood_group,
+            match_date,
+            city
+        )
         cur.execute(query, values)
+        
+        # Automatically update any active blood requests for this recipient to 'matched'
+        cur.execute("""
+            UPDATE blood_request 
+            SET Status = 'matched' 
+            WHERE UPPER(Recipient_id) = %s AND LOWER(Status) IN ('pending', 'urgent')
+        """, (recipient_id,))
+
         db.commit()
         cur.close()
-        return success(message=f"Match '{data['match_id']}' recorded successfully.")
+        return success(message=f"Match '{match_id}' recorded successfully.")
     except mysql.connector.Error as err:
         print(f"Error creating match: {err}")
         return error("Failed to record match. ID may already exist.")
@@ -531,13 +561,14 @@ def all_matches():
 @app.route("/delete_match/<match_id>", methods=["DELETE"])
 @admin_required
 def delete_match(match_id):
+    match_id_upper = match_id.strip().upper()
     try:
         cur = safe_cursor()
-        cur.execute("DELETE FROM matches WHERE Match_id = %s", (match_id,))
+        cur.execute("DELETE FROM matches WHERE UPPER(Match_id) = %s", (match_id_upper,))
         db.commit()
         if cur.rowcount == 0:
             return error("Match not found.", 404)
-        return success(message=f"Match '{match_id}' deleted successfully.")
+        return success(message=f"Match '{match_id_upper}' deleted successfully.")
     except mysql.connector.Error as err:
         print(f"Error deleting match: {err}")
         return error("Failed to delete match.")
