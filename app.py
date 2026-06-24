@@ -1,9 +1,10 @@
 import mysql.connector
-from flask import Flask, request, render_template, jsonify, redirect, session
+from flask import Flask, request, render_template, jsonify, redirect, session, g
 from werkzeug.security import check_password_hash
 from functools import wraps
 from dotenv import load_dotenv
 import os
+from werkzeug.local import LocalProxy
 
 load_dotenv()
 
@@ -20,25 +21,37 @@ def get_db():
         auth_plugin="mysql_native_password"
     )
 
-try:
-    db = get_db()
-    cursor = db.cursor()
-    print("✅ Connected to MySQL database.")
-except mysql.connector.Error as err:
-    print(f"❌ Error connecting to MySQL: {err}")
-    db = None
-    cursor = None
+def get_db_connection():
+    if 'db' not in g:
+        g.db = get_db()
+    return g.db
 
+db = LocalProxy(get_db_connection)
+
+@app.teardown_appcontext
+def teardown_db(exception):
+    db_conn = g.pop('db', None)
+    if db_conn is not None:
+        try:
+            db_conn.close()
+        except Exception:
+            pass
 
 def safe_cursor():
     """Return a working cursor, reconnecting if the connection dropped."""
-    global db, cursor
+    db_conn = get_db_connection()
     try:
-        db.ping(reconnect=True, attempts=3, delay=1)
+        db_conn.ping(reconnect=True, attempts=3, delay=1)
     except Exception:
-        db = get_db()
-    cursor = db.cursor()
-    return cursor
+        g.db = get_db()
+        db_conn = g.db
+    return db_conn.cursor()
+
+def clean_optional_string(val):
+    if val is None:
+        return None
+    val_str = str(val).strip()
+    return val_str if val_str else None
 
 
 #  RESPONSE HELPERS
@@ -83,7 +96,7 @@ def logout():
 
 
 #  ADMIN AUTH
-ADMIN_USERNAME      = os.getenv("ADMIN_USERNAME", "admin")
+ADMIN_USERNAME      = os.getenv("ADMIN_USERNAME", "admin").strip()
 ADMIN_PASSWORD_HASH = os.getenv("ADMIN_PASSWORD_HASH", "")
 
 @app.route("/admin_login", methods=["POST"])
@@ -109,24 +122,36 @@ def admin_login():
 @app.route("/add_donor", methods=["POST"])
 def add_donor():
     data = request.get_json(silent=True) or {}
-    required = ["donor_id", "blood_group", "name", "age", "gender", "phone", "city", "last_donation_date"]
+    required = ["donor_id", "blood_group", "name", "age"]
     missing = [f for f in required if not str(data.get(f, "")).strip()]
     if missing:
         return error(f"Missing fields: {', '.join(missing)}", 400)
+
+    # Clean optional fields (convert empty to None)
+    gender = clean_optional_string(data.get("gender"))
+    phone = clean_optional_string(data.get("phone"))
+    city = clean_optional_string(data.get("city"))
+    last_donation_date = clean_optional_string(data.get("last_donation_date"))
 
     query = """
         INSERT INTO donor (Donor_id, Blood_Group, Name, Age, Gender, Phone, City, Last_Donation_Date)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
     """
     values = (
-        data["donor_id"], data["blood_group"], data["name"],
-        data["age"], data["gender"], data["phone"],
-        data["city"], data["last_donation_date"]
+        str(data["donor_id"]).strip(),
+        str(data["blood_group"]).strip(),
+        str(data["name"]).strip(),
+        int(data["age"]),
+        gender,
+        phone,
+        city,
+        last_donation_date
     )
     try:
         cur = safe_cursor()
         cur.execute(query, values)
         db.commit()
+        cur.close()
         return success(message="Donor added successfully.")
     except mysql.connector.Error as err:
         print(f"Error inserting donor: {err}")
@@ -207,23 +232,34 @@ def delete_donor(donor_id):
 @app.route("/add_recipient", methods=["POST"])
 def add_recipient():
     data = request.get_json(silent=True) or {}
-    required = ["recipient_id", "blood_group", "name", "age", "gender", "phone", "city"]
+    required = ["recipient_id", "blood_group", "name", "age"]
     missing = [f for f in required if not str(data.get(f, "")).strip()]
     if missing:
         return error(f"Missing fields: {', '.join(missing)}", 400)
+
+    # Clean optional fields (convert empty to None)
+    gender = clean_optional_string(data.get("gender"))
+    phone = clean_optional_string(data.get("phone"))
+    city = clean_optional_string(data.get("city"))
 
     query = """
         INSERT INTO recipient (Recipient_id, Blood_Group, Name, Age, Gender, Phone, City)
         VALUES (%s, %s, %s, %s, %s, %s, %s)
     """
     values = (
-        data["recipient_id"], data["blood_group"], data["name"],
-        data["age"], data["gender"], data["phone"], data["city"]
+        str(data["recipient_id"]).strip(),
+        str(data["blood_group"]).strip(),
+        str(data["name"]).strip(),
+        int(data["age"]),
+        gender,
+        phone,
+        city
     )
     try:
         cur = safe_cursor()
         cur.execute(query, values)
         db.commit()
+        cur.close()
         return success(message="Recipient added successfully.")
     except mysql.connector.Error as err:
         print(f"Error inserting recipient: {err}")
@@ -302,23 +338,33 @@ def delete_recipient(recipient_id):
 @app.route("/create_request", methods=["POST"])
 def create_request():
     data = request.get_json(silent=True) or {}
-    required = ["request_id", "recipient_id", "blood_group", "request_date", "city", "status"]
+    required = ["request_id", "recipient_id", "blood_group"]
     missing = [f for f in required if not str(data.get(f, "")).strip()]
     if missing:
         return error(f"Missing fields: {', '.join(missing)}", 400)
+
+    # Clean optional fields (convert empty to None)
+    request_date = clean_optional_string(data.get("request_date"))
+    city = clean_optional_string(data.get("city"))
+    status = clean_optional_string(data.get("status")) or "pending"
 
     query = """
         INSERT INTO blood_request (Request_id, Recipient_id, Blood_Group, Request_date, City, Status)
         VALUES (%s, %s, %s, %s, %s, %s)
     """
     values = (
-        data["request_id"], data["recipient_id"], data["blood_group"],
-        data["request_date"], data["city"], data["status"]
+        str(data["request_id"]).strip(),
+        str(data["recipient_id"]).strip(),
+        str(data["blood_group"]).strip(),
+        request_date,
+        city,
+        status
     )
     try:
         cur = safe_cursor()
         cur.execute(query, values)
         db.commit()
+        cur.close()
         return success(message="Blood request created successfully.")
     except mysql.connector.Error as err:
         print(f"Error inserting blood request: {err}")
@@ -415,10 +461,17 @@ def find_matches():
 @admin_required
 def create_match():
     data = request.get_json(silent=True) or {}
-    required = ["match_id", "donor_id", "recipient_id", "match_date", "city"]
+    required = ["match_id", "donor_id", "recipient_id"]
     missing = [f for f in required if not str(data.get(f, "")).strip()]
     if missing:
         return error(f"Missing fields: {', '.join(missing)}", 400)
+
+    # Clean optional fields (convert empty to None)
+    donor_name = clean_optional_string(data.get("donor_name"))
+    recipient_name = clean_optional_string(data.get("recipient_name"))
+    blood_group = clean_optional_string(data.get("blood_group"))
+    match_date = clean_optional_string(data.get("match_date"))
+    city = clean_optional_string(data.get("city"))
 
     query = """
         INSERT INTO matches
@@ -426,19 +479,20 @@ def create_match():
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
     """
     values = (
-        data["match_id"],
-        data["donor_id"],
-        data.get("donor_name", ""),
-        data["recipient_id"],
-        data.get("recipient_name", ""),
-        data.get("blood_group", ""),
-        data["match_date"],
-        data["city"]
+        str(data["match_id"]).strip(),
+        str(data["donor_id"]).strip(),
+        donor_name,
+        str(data["recipient_id"]).strip(),
+        recipient_name,
+        blood_group,
+        match_date,
+        city
     )
     try:
         cur = safe_cursor()
         cur.execute(query, values)
         db.commit()
+        cur.close()
         return success(message=f"Match '{data['match_id']}' recorded successfully.")
     except mysql.connector.Error as err:
         print(f"Error creating match: {err}")

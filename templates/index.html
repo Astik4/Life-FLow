@@ -527,20 +527,24 @@ async function addDonor() {
     city:               val('d_city').trim(),
     last_donation_date: val('d_date')
   };
-  if (!payload.donor_id || !payload.name || !payload.blood_group)
-    return toast('Donor ID, Name and Blood Group are required.', 'error');
+  if (!payload.donor_id || !payload.name || !payload.blood_group || !payload.age)
+    return toast('Donor ID, Name, Blood Group, and Age are required.', 'error');
   if (store.donors.find(d => d.donor_id === payload.donor_id))
     return toast(`Donor ID "${payload.donor_id}" already exists.`, 'error');
 
   try {
     const res  = await fetch('/add_donor', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
     const data = await res.json();
-    if (!data.success && data.message) return toast(data.message, 'error');
-  } catch { /* offline — fall through to local store */ }
-
-  store.addDonor(payload);
-  toast(`${payload.name} registered as donor ✔`);
-  clearFields(['d_id','d_name','d_group','d_age','d_gender','d_phone','d_city','d_date']);
+    if (data.success) {
+      store.addDonor(payload);
+      toast(`${payload.name} registered as donor ✔`);
+      clearFields(['d_id','d_name','d_group','d_age','d_gender','d_phone','d_city','d_date']);
+    } else {
+      toast(data.message || 'Failed to add donor.', 'error');
+    }
+  } catch (err) {
+    toast('Network error: Failed to connect to server.', 'error');
+  }
 }
 
 async function addRecipient() {
@@ -553,20 +557,24 @@ async function addRecipient() {
     phone:        val('r_phone').trim(),
     city:         val('r_city').trim()
   };
-  if (!payload.recipient_id || !payload.name || !payload.blood_group)
-    return toast('Recipient ID, Name and Blood Group are required.', 'error');
+  if (!payload.recipient_id || !payload.name || !payload.blood_group || !payload.age)
+    return toast('Recipient ID, Name, Blood Group, and Age are required.', 'error');
   if (store.recipients.find(r => r.recipient_id === payload.recipient_id))
     return toast(`Recipient ID "${payload.recipient_id}" already exists.`, 'error');
 
   try {
     const res  = await fetch('/add_recipient', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
     const data = await res.json();
-    if (!data.success && data.message) return toast(data.message, 'error');
-  } catch { /* offline */ }
-
-  store.addRecipient(payload);
-  toast(`${payload.name} registered as recipient ✔`);
-  clearFields(['r_id','r_name','r_group','r_age','r_gender','r_phone','r_city']);
+    if (data.success) {
+      store.addRecipient(payload);
+      toast(`${payload.name} registered as recipient ✔`);
+      clearFields(['r_id','r_name','r_group','r_age','r_gender','r_phone','r_city']);
+    } else {
+      toast(data.message || 'Failed to add recipient.', 'error');
+    }
+  } catch (err) {
+    toast('Network error: Failed to connect to server.', 'error');
+  }
 }
 
 async function addRequest() {
@@ -586,13 +594,17 @@ async function addRequest() {
   try {
     const res  = await fetch('/create_request', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
     const data = await res.json();
-    if (!data.success && data.message) return toast(data.message, 'error');
-  } catch { /* offline */ }
-
-  store.addRequest(payload);
-  toast(`Request ${payload.request_id} created ✔`);
-  clearFields(['req_id','req_recipient','req_group','req_date','req_city']);
-  document.getElementById('req_status').selectedIndex = 0;
+    if (data.success) {
+      store.addRequest(payload);
+      toast(`Request ${payload.request_id} created ✔`);
+      clearFields(['req_id','req_recipient','req_group','req_date','req_city']);
+      document.getElementById('req_status').selectedIndex = 0;
+    } else {
+      toast(data.message || 'Failed to create request.', 'error');
+    }
+  } catch (err) {
+    toast('Network error: Failed to connect to server.', 'error');
+  }
 }
 
 /* ══════════════════════════════════════════════
@@ -731,8 +743,46 @@ function toast(msg, type = 'success') {
   setTimeout(() => t.remove(), 3200);
 }
 
+async function init() {
+  try {
+    const [resDonors, resRecipients, resRequests] = await Promise.all([
+      fetch('/all_donors'),
+      fetch('/all_recipients'),
+      fetch('/all_requests')
+    ]);
+
+    const donorsData = await resDonors.json();
+    const recipientsData = await resRecipients.json();
+    const requestsData = await resRequests.json();
+
+    if (donorsData.success) store.donors = donorsData.donors || [];
+    if (recipientsData.success) store.recipients = recipientsData.recipients || [];
+    if (requestsData.success) store.requests = requestsData.requests || [];
+
+    // Construct activity feed using existing records
+    const tempActivity = [];
+    store.donors.forEach(d => {
+      tempActivity.push({ type: 'donor', id: d.donor_id, label: d.name, detail: d.blood_group, time: new Date(Date.now() - 3600000) });
+    });
+    store.recipients.forEach(r => {
+      tempActivity.push({ type: 'recipient', id: r.recipient_id, label: r.name, detail: r.blood_group, time: new Date(Date.now() - 1800000) });
+    });
+    store.requests.forEach(rq => {
+      tempActivity.push({ type: 'request', id: rq.request_id, label: 'Blood ' + rq.blood_group, detail: rq.city, time: new Date(Date.now() - 600000) });
+    });
+    
+    // Sort activity feed to show the latest additions
+    store.activity = tempActivity.slice(-8).reverse();
+
+    renderAll();
+  } catch (err) {
+    toast('Error loading database records.', 'error');
+    renderAll();
+  }
+}
+
 /* ── Boot ── */
-renderAll();
+init();
 
 /* ── Refresh activity time labels every 30s ── */
 setInterval(() => { if (store.activity.length) renderDashboard(); }, 30000);

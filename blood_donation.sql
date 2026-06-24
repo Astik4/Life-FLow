@@ -33,7 +33,7 @@ CREATE TABLE blood_request (
     Request_date DATE,
     City VARCHAR(50),
     Status VARCHAR(20),
-    FOREIGN KEY (Recipient_id) REFERENCES recipient(Recipient_id)
+    FOREIGN KEY (Recipient_id) REFERENCES recipient(Recipient_id) ON DELETE CASCADE
 );
 
 --Matches Table
@@ -64,4 +64,4 @@ INSERT INTO blood_request VALUES
 
 -- Sample Match
 INSERT INTO matches VALUES  
-('M001', 'DNR-001', 'Rahul Sharma', 'RCP-001', 'Amit Kumar', 'A+', '2026-03-21', 'Delhi');
+('M001', 'D001', 'Rahul Sharma', 'R001', 'Amit Kumar', 'A+', '2026-03-21', 'Delhi');

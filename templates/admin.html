@@ -411,6 +411,12 @@ function switchTab(name,el){
   el.classList.add('active');
   $('panel-'+name).classList.add('active');
   updateStats();
+
+  // Automatically refresh tab data on switch
+  if (name === 'donor') loadDonors();
+  if (name === 'recipient') loadRecipients();
+  if (name === 'request') loadRequests();
+  if (name === 'matches') loadAllMatches();
 }
 
 function updateStats(){
@@ -605,11 +611,22 @@ function clearMatchSearch(){
 }
 
 function askMatch(donorId, donorName, recipId){
-  const recipLabel = recipId || '(no recipient selected)';
+  const trimmedRecipId = recipId ? recipId.trim() : '';
+  if (!trimmedRecipId) {
+    toast('Please enter a Recipient ID in Step 1 for matching.', 'error');
+    return;
+  }
+  // Check if the recipient exists in DB.recipients
+  const recip = DB.recipients.find(r => r.recipient_id === trimmedRecipId);
+  if (!recip) {
+    toast(`Recipient ID "${trimmedRecipId}" not found in registry. Add the recipient first.`, 'error');
+    return;
+  }
+
   openModal('🔗 Confirm Match',
-    `Link donor "${donorName}" (${donorId}) with recipient "${recipLabel}"? This will be recorded as a confirmed match.`,
+    `Link donor "${donorName}" (${donorId}) with recipient "${recip.name}" (${trimmedRecipId})? This will be recorded as a confirmed match.`,
     '🔗 Confirm','var(--indigo)',
-    ()=>recordMatch(donorId,donorName,recipId),
+    ()=>recordMatch(donorId,donorName,trimmedRecipId),
     true
   );
 }
@@ -682,8 +699,17 @@ function renderAllMatches(){
 function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
 
 /* ── init ── */
-updateStats();
-loadDonors();
+async function initAdmin() {
+  updateStats();
+  // Fetch everything concurrently on boot
+  await Promise.all([
+    loadDonors(),
+    loadRecipients(),
+    loadRequests(),
+    loadAllMatches()
+  ]);
+}
+initAdmin();
 </script>
 </body>
 </html>
