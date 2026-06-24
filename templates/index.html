@@ -500,7 +500,24 @@ function renderRequestsTable() {
   const tbody = document.getElementById('req-table-body');
   setText('req-table-count', `${store.requests.length} request${store.requests.length !== 1 ? 's' : ''}`);
   if (!store.requests.length) {
-    tbody.innerHTML = '<tr class="empty-row"><td colspan="6">Noasync function addDonor() {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="6">No requests yet</td></tr>';
+    return;
+  }
+  tbody.innerHTML = store.requests.map(r => `
+    <tr>
+      <td><code>${r.request_id}</code></td>
+      <td>${r.recipient_id}</td>
+      <td><span class="blood-badge">${r.blood_group}</span></td>
+      <td>${r.request_date || '—'}</td>
+      <td>${r.city || '—'}</td>
+      <td>${statusBadge(r.status)}</td>
+    </tr>`).join('');
+}
+
+/* ══════════════════════════════════════════════
+   CRUD — ADD DONOR / RECIPIENT / REQUEST
+══════════════════════════════════════════════ */
+async function addDonor() {
   const payload = {
     donor_id:           val('d_id').trim().toUpperCase(),
     name:               val('d_name').trim(),
@@ -593,7 +610,7 @@ async function addRequest() {
 
 /* ══════════════════════════════════════════════
    SEARCH & FILTER
- ══════════════════════════════════════════════ */
+══════════════════════════════════════════════ */
 async function searchDonor() {
   const id = val('search_id').trim().toUpperCase();
   if (!id) return toast('Enter a Donor ID to search.', 'error');
@@ -613,29 +630,6 @@ async function searchDonor() {
 
   if (!donor) { toast('Donor not found.', 'error'); hideResult(); return; }
   showResult(donor);
-  // Clear filter UI
-  document.getElementById('filter-results').style.display = 'none';
-}═══════════════════ */
-async function searchDonor() {
-  const id = val('search_id').trim();
-  if (!id) return toast('Enter a Donor ID to search.', 'error');
-
-  // 1. Check local store first (instant)
-  let donor = store.donors.find(d => d.donor_id === id);
-
-  // 2. If not in local store, try backend
-  if (!donor) {
-    try {
-      const res  = await fetch(`/search_donor/${encodeURIComponent(id)}`);
-      const data = await res.json();
-      if (data.donor) donor = data.donor;
-      else if (data.success === false) { toast('Donor not found.', 'error'); hideResult(); return; }
-    } catch { /* backend not reachable */ }
-  }
-
-  if (!donor) { toast('Donor not found.', 'error'); hideResult(); return; }
-  showResult(donor);
-  // Clear filter UI
   document.getElementById('filter-results').style.display = 'none';
 }
 
