@@ -533,14 +533,20 @@ function renderRequests(){
 function initiateMatchFromRequest(recipientId, bloodGroup, city) {
   // 1. Switch to matches tab
   const tabEl = document.querySelector('.nav-tab.im') || document.querySelectorAll('.nav-tab')[3];
-  switchTab('matches', tabEl);
+  if (tabEl) {
+    switchTab('matches', tabEl);
+  } else {
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    const p = $('panel-matches');
+    if (p) p.classList.add('active');
+  }
   
   // 2. Populate search fields
   const mgSelect = $('mg');
   if (mgSelect) mgSelect.value = bloodGroup ? bloodGroup.trim().toUpperCase() : '';
   
   const mcInput = $('mc');
-  if (mcInput) mcInput.value = city ? city.trim() : '';
+  if (mcInput) mcInput.value = ''; // Leave city blank for wider compatibility choice
   
   const mridInput = $('mrid');
   if (mridInput) mridInput.value = recipientId ? recipientId.trim().toUpperCase() : '';
@@ -602,8 +608,8 @@ function findCompatible(){
 
   // Filter from loaded donors
   let results = [...DB.donors];
-  if(group) results = results.filter(d => d.blood_group.toUpperCase() === group);
-  if(city)  results = results.filter(d => d.city.toLowerCase().includes(city));
+  if(group) results = results.filter(d => d.blood_group && d.blood_group.toUpperCase() === group);
+  if(city)  results = results.filter(d => d.city && d.city.toLowerCase().includes(city));
 
   // Show results panel
   $('mrwrap').classList.add('vis');
@@ -642,7 +648,7 @@ function askMatch(donorId, donorName, recipId){
     return;
   }
   // Check if the recipient exists in DB.recipients
-  const recip = DB.recipients.find(r => r.recipient_id.toUpperCase() === trimmedRecipId);
+  const recip = DB.recipients.find(r => r.recipient_id && r.recipient_id.toUpperCase() === trimmedRecipId);
   if (!recip) {
     toast(`Recipient ID "${trimmedRecipId}" not found in registry. Add the recipient first.`, 'error');
     return;
@@ -659,8 +665,8 @@ function askMatch(donorId, donorName, recipId){
 async function recordMatch(donorId,donorName,recipId){
   const matchId = 'MCH-'+String(DB.matches.length+1).padStart(3,'0');
   const today   = new Date().toISOString().split('T')[0];
-  const donor   = DB.donors.find(d=>d.donor_id.toUpperCase()===donorId.toUpperCase());
-  const recip   = DB.recipients.find(r=>r.recipient_id.toUpperCase()===recipId.toUpperCase());
+  const donor   = DB.donors.find(d=>d.donor_id && d.donor_id.toUpperCase()===donorId.toUpperCase());
+  const recip   = DB.recipients.find(r=>r.recipient_id && r.recipient_id.toUpperCase()===recipId.toUpperCase());
 
   const payload = {
     match_id:       matchId,

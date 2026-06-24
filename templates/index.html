@@ -513,7 +513,7 @@ function renderRequestsTable() {
   };
   if (!payload.donor_id || !payload.name || !payload.blood_group || !payload.age)
     return toast('Donor ID, Name, Blood Group, and Age are required.', 'error');
-  if (store.donors.find(d => d.donor_id.toUpperCase() === payload.donor_id))
+  if (store.donors.find(d => d.donor_id && d.donor_id.toUpperCase() === payload.donor_id))
     return toast(`Donor ID "${payload.donor_id}" already exists.`, 'error');
 
   try {
@@ -543,7 +543,7 @@ async function addRecipient() {
   };
   if (!payload.recipient_id || !payload.name || !payload.blood_group || !payload.age)
     return toast('Recipient ID, Name, Blood Group, and Age are required.', 'error');
-  if (store.recipients.find(r => r.recipient_id.toUpperCase() === payload.recipient_id))
+  if (store.recipients.find(r => r.recipient_id && r.recipient_id.toUpperCase() === payload.recipient_id))
     return toast(`Recipient ID "${payload.recipient_id}" already exists.`, 'error');
 
   try {
@@ -572,7 +572,7 @@ async function addRequest() {
   };
   if (!payload.request_id || !payload.recipient_id || !payload.blood_group)
     return toast('Request ID, Recipient ID and Blood Group are required.', 'error');
-  if (store.requests.find(r => r.request_id.toUpperCase() === payload.request_id))
+  if (store.requests.find(r => r.request_id && r.request_id.toUpperCase() === payload.request_id))
     return toast(`Request ID "${payload.request_id}" already exists.`, 'error');
 
   try {
@@ -599,7 +599,7 @@ async function searchDonor() {
   if (!id) return toast('Enter a Donor ID to search.', 'error');
 
   // 1. Check local store first (instant)
-  let donor = store.donors.find(d => d.donor_id.toUpperCase() === id);
+  let donor = store.donors.find(d => d.donor_id && d.donor_id.toUpperCase() === id);
 
   // 2. If not in local store, try backend
   if (!donor) {
