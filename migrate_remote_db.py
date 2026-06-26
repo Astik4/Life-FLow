@@ -6,14 +6,16 @@ load_dotenv()
 
 def migrate():
     db_host = os.getenv("DB_HOST", "localhost")
+    db_port = int(os.getenv("DB_PORT", 3306))
     db_user = os.getenv("DB_USER", "root")
     db_password = os.getenv("DB_PASSWORD", "")
     db_name = os.getenv("DB_NAME", "blood_donation")
 
-    print(f"Connecting to database '{db_name}' on '{db_host}' as '{db_user}'...")
+    print(f"Connecting to database '{db_name}' on '{db_host}:{db_port}' as '{db_user}'...")
     try:
         conn = mysql.connector.connect(
             host=db_host,
+            port=db_port,
             user=db_user,
             password=db_password,
             database=db_name,

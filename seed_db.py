@@ -10,6 +10,7 @@ load_dotenv()
 
 # Database credentials
 db_host = os.getenv("DB_HOST", "localhost")
+db_port = int(os.getenv("DB_PORT", 3306))
 db_user = os.getenv("DB_USER", "root")
 db_password = os.getenv("DB_PASSWORD", "")
 db_name = os.getenv("DB_NAME", "blood_donation")
@@ -31,6 +32,7 @@ def seed():
     try:
         conn = mysql.connector.connect(
             host=db_host,
+            port=db_port,
             user=db_user,
             password=db_password,
             database=db_name,
