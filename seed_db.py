@@ -35,8 +35,7 @@ def seed():
             port=db_port,
             user=db_user,
             password=db_password,
-            database=db_name,
-            auth_plugin="mysql_native_password"
+            database=db_name
         )
         cursor = conn.cursor()
     except Exception as e:

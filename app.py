@@ -18,8 +18,7 @@ def get_db():
         port=int(os.getenv("DB_PORT", 3306)),
         user=os.getenv("DB_USER", "root"),
         password=os.getenv("DB_PASSWORD", ""),
-        database=os.getenv("DB_NAME", "blood_donation"),
-        auth_plugin="mysql_native_password"
+        database=os.getenv("DB_NAME", "blood_donation")
     )
 
 def get_db_connection():
