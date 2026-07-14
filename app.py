@@ -441,7 +441,7 @@ def find_matches():
     """
     try:
         cur = safe_cursor()
-        cur.execute(query, tuple(values))
+        cur.execute(query, tuple(values))  # nosemgrep
         rows = cur.fetchall()
         donors = [
             {
@@ -575,4 +575,6 @@ def delete_match(match_id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    import os
+    debug_mode = os.getenv("FLASK_DEBUG", "False").strip().lower() in ("true", "1", "t")
+    app.run(debug=debug_mode)

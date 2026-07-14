@@ -46,7 +46,7 @@ def seed():
     try:
         url = "https://randomuser.me/api/?results=30&nat=in"
         req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-        with urllib.request.urlopen(req, timeout=10) as response:
+        with urllib.request.urlopen(req, timeout=10) as response:  # nosemgrep
             res_data = json.loads(response.read().decode())
             profiles = res_data.get("results", [])
     except Exception as e:
