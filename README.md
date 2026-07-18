@@ -118,7 +118,7 @@ Since Vercel is stateless and cannot execute direct DB schema operations, you wi
 
 ### 3. Deploy to Vercel
 1. Log in to [Vercel](https://vercel.com/) and click **Add New** -> **Project**.
-2. Import your GitHub repository (`Astik4/Life-FLow`).
+2. Import your GitHub repository.
 3. Under **Configure Project**:
    * Keep the **Framework Preset** as **Other**.
    * Open the **Environment Variables** drop-down.
@@ -128,7 +128,7 @@ Since Vercel is stateless and cannot execute direct DB schema operations, you wi
    * `DB_PASSWORD`: (your Aiven password)
    * `DB_NAME`: `defaultdb`
    * `SECRET_KEY`: `your_vercel_secret_key`
-   * `ADMIN_USERNAME`: `Astik`
-   * `ADMIN_PASSWORD`: `Astik@042509`
-   * `ADMIN_PASSWORD_HASH`: `pbkdf2:sha256:1000000$SEbIrOcXrnNkJYe4$2dcd2d212dfb534eefd7d843ecc2f46f9ea375d1cc456d431b647d4f2976a512`
+   * `ADMIN_USERNAME`: `your_username`
+   * `ADMIN_PASSWORD`: `your_password`
+   * `ADMIN_PASSWORD_HASH`: `hashed_password_if_needed`
 5. Click **Deploy**. Vercel will automatically install the packages from `requirements.txt`, hook up the serverless handler via `vercel.json` and `api/index.py`, and launch your application!
